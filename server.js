@@ -202,12 +202,12 @@ function compactMeaningText(value) {
 function getSemanticThreshold(answer, candidate) {
   const minLength = Math.min(compactMeaningText(answer).length, compactMeaningText(candidate).length);
   if (minLength <= 2) {
-    return 0.9;
+    return 0.86;
   }
   if (minLength <= 4) {
-    return 0.84;
+    return 0.8;
   }
-  return 0.78;
+  return 0.76;
 }
 
 function cosineSimilarity(left, right) {
