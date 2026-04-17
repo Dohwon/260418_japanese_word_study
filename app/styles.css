@@ -553,7 +553,7 @@ button {
   position: absolute;
   inset: 0;
   transform-style: preserve-3d;
-  transition: transform 0.72s ease, translate 0.72s ease, opacity 0.72s ease;
+  transition: transform 0.6s ease;
 }
 
 .study-card.is-flipped .study-card-inner {
@@ -561,13 +561,11 @@ button {
 }
 
 .study-card.is-right .study-card-inner {
-  translate: 220px -8px;
-  opacity: 0;
+  animation: study-card-right 0.98s ease forwards;
 }
 
 .study-card.is-left .study-card-inner {
-  translate: -220px 8px;
-  opacity: 0;
+  animation: study-card-left 0.98s ease forwards;
 }
 
 .study-face {
@@ -834,6 +832,44 @@ tbody tr {
   }
   100% {
     transform: translateX(180px) translateY(-36px) scale(0.82) rotate(10deg);
+    opacity: 0;
+  }
+}
+
+@keyframes study-card-right {
+  0% {
+    transform: rotateY(0deg) translate3d(0, 0, 0);
+    opacity: 1;
+  }
+  38% {
+    transform: rotateY(180deg) translate3d(0, 0, 0);
+    opacity: 1;
+  }
+  62% {
+    transform: rotateY(180deg) translate3d(0, 0, 0);
+    opacity: 1;
+  }
+  100% {
+    transform: rotateY(180deg) translate3d(220px, -8px, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes study-card-left {
+  0% {
+    transform: rotateY(0deg) translate3d(0, 0, 0);
+    opacity: 1;
+  }
+  38% {
+    transform: rotateY(180deg) translate3d(0, 0, 0);
+    opacity: 1;
+  }
+  62% {
+    transform: rotateY(180deg) translate3d(0, 0, 0);
+    opacity: 1;
+  }
+  100% {
+    transform: rotateY(180deg) translate3d(-220px, 8px, 0);
     opacity: 0;
   }
 }

@@ -108,6 +108,15 @@ function handleClick(event) {
   }
 
   if (button.dataset.route) {
+    if (runtime.route === button.dataset.route) {
+      if (button.dataset.route === "study") {
+        runtime.studyTab = "study";
+        runtime.studySession = null;
+        ensureStudySession();
+      }
+      render();
+      return;
+    }
     window.location.hash = button.dataset.route;
     return;
   }
@@ -177,7 +186,10 @@ function handleSubmit(event) {
 }
 
 function ensureStudySession() {
-  if (runtime.studySession?.cards?.length) {
+  if (
+    runtime.studySession?.cards?.length &&
+    runtime.studySession.currentIndex < runtime.studySession.cards.length
+  ) {
     return;
   }
 
@@ -298,7 +310,7 @@ function submitStudyAnswer(rawAnswer) {
       session.message = "오늘 카드가 모두 넘어갔습니다. 공부 종료를 누르면 전체 단어 확인하기로 이동합니다.";
     }
     render();
-  }, 820);
+  }, 980);
 }
 
 function registerStudyResult(wordId, isCorrect) {
