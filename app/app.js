@@ -50,6 +50,15 @@ const runtime = {
   studySession: null,
   archiveSession: null,
   timerId: null,
+  auth: {
+    status: "loading",
+    user: null,
+    clientId: "",
+    googleReady: false,
+    error: "",
+    syncMessage: "",
+  },
+  syncTimer: 0,
 };
 const semanticDecisionCache = new Map();
 
@@ -63,7 +72,7 @@ window.addEventListener("hashchange", syncRoute);
 root.addEventListener("click", handleClick);
 root.addEventListener("submit", handleSubmit);
 startClock();
-render();
+bootApp();
 
 function buildLevelCatalog() {
   const catalog = {
@@ -95,10 +104,14 @@ function normalizeLevelData(source, fallbackLevel) {
 
 function hydrateState() {
   const stored = safeParse(localStorage.getItem(APP_STORAGE_KEY)) || {};
+  return createStateFromSnapshot(stored);
+}
+
+function createStateFromSnapshot(snapshot = {}) {
   const progress = {};
 
   for (const word of words) {
-    const record = stored.progress?.[word.uid] || {};
+    const record = snapshot.progress?.[word.uid] || {};
     progress[word.uid] = {
       stage: clampNumber(record.stage, 0, 4, 0),
       studyCount: Number(record.studyCount) || 0,
@@ -111,17 +124,139 @@ function hydrateState() {
   }
 
   return {
-    settings: {
-      randomOrder: Boolean(stored.settings?.randomOrder),
-      randomLevel: Boolean(stored.settings?.randomLevel),
+    meta: {
+      updatedAt: Number(snapshot.meta?.updatedAt) || 0,
     },
-    archiveRuns: Array.isArray(stored.archiveRuns) ? stored.archiveRuns : [],
+    settings: {
+      randomOrder: Boolean(snapshot.settings?.randomOrder),
+      randomLevel: Boolean(snapshot.settings?.randomLevel),
+    },
+    archiveRuns: Array.isArray(snapshot.archiveRuns) ? snapshot.archiveRuns : [],
     progress,
   };
 }
 
 function saveState() {
+  state.meta.updatedAt = Date.now();
   localStorage.setItem(APP_STORAGE_KEY, JSON.stringify(state));
+  queueServerSync();
+}
+
+function saveStateLocallyOnly() {
+  localStorage.setItem(APP_STORAGE_KEY, JSON.stringify(state));
+}
+
+async function bootApp() {
+  render();
+  await loadAuthConfig();
+  await restoreServerSession();
+  render();
+}
+
+async function loadAuthConfig() {
+  try {
+    const response = await fetch("/api/auth/config");
+    if (!response.ok) {
+      throw new Error(`auth-config ${response.status}`);
+    }
+    const payload = await response.json();
+    runtime.auth.clientId = payload.clientId || "";
+    runtime.auth.error = payload.clientId ? "" : "GOOGLE_CLIENT_ID가 아직 설정되지 않았습니다.";
+  } catch (error) {
+    runtime.auth.clientId = "";
+    runtime.auth.error = "로그인 설정을 불러오지 못했습니다.";
+  }
+}
+
+async function restoreServerSession() {
+  try {
+    const response = await fetch("/api/session");
+    if (!response.ok) {
+      throw new Error(`session ${response.status}`);
+    }
+
+    const payload = await response.json();
+    runtime.auth.status = "ready";
+    runtime.auth.user = payload.authenticated ? payload.user : null;
+    runtime.auth.error = "";
+    runtime.auth.syncMessage = payload.authenticated ? "서버 계정 데이터를 불러왔습니다." : "";
+
+    if (!payload.authenticated) {
+      return;
+    }
+
+    const remoteState = createStateFromSnapshot(payload.state || {});
+    const localUpdatedAt = Number(state.meta?.updatedAt) || 0;
+    const remoteUpdatedAt = Number(remoteState.meta?.updatedAt) || 0;
+
+    if (remoteUpdatedAt > localUpdatedAt) {
+      state = remoteState;
+      saveStateLocallyOnly();
+      runtime.auth.syncMessage = "서버에 저장된 학습 기록으로 동기화했습니다.";
+      return;
+    }
+
+    if (localUpdatedAt > remoteUpdatedAt || hasMeaningfulLocalProgress()) {
+      await pushStateToServer();
+      runtime.auth.syncMessage = "현재 기기 학습 기록을 서버에 동기화했습니다.";
+      return;
+    }
+
+    state = remoteState;
+    saveStateLocallyOnly();
+    runtime.auth.syncMessage = "계정 학습 기록이 이미 최신 상태입니다.";
+  } catch (error) {
+    runtime.auth.status = "ready";
+    runtime.auth.user = null;
+    runtime.auth.error = "로그인 상태를 확인하지 못했습니다.";
+    runtime.auth.syncMessage = "";
+  }
+}
+
+function hasMeaningfulLocalProgress() {
+  if (state.archiveRuns.length) {
+    return true;
+  }
+  if (state.settings.randomOrder || state.settings.randomLevel) {
+    return true;
+  }
+  return words.some((word) => state.progress[word.uid].studyCount > 0);
+}
+
+function queueServerSync() {
+  if (!runtime.auth.user) {
+    return;
+  }
+  if (runtime.syncTimer) {
+    window.clearTimeout(runtime.syncTimer);
+  }
+  runtime.syncTimer = window.setTimeout(() => {
+    pushStateToServer().catch(() => {});
+  }, 350);
+}
+
+async function pushStateToServer() {
+  if (!runtime.auth.user) {
+    return;
+  }
+  if (runtime.syncTimer) {
+    window.clearTimeout(runtime.syncTimer);
+    runtime.syncTimer = 0;
+  }
+
+  const response = await fetch("/api/state", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ state }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`state-sync ${response.status}`);
+  }
+
+  runtime.auth.syncMessage = "학습 기록을 계정에 저장했습니다.";
 }
 
 function initializeRoute() {
@@ -194,6 +329,11 @@ function handleClick(event) {
   }
 
   const action = button.dataset.action;
+  if (action === "logout") {
+    logout().catch(() => {});
+    return;
+  }
+
   if (action === "regenerate-study") {
     runtime.studySession = null;
     ensureStudySession();
@@ -613,6 +753,10 @@ function render() {
   if (activeInput && !runtime.studySession?.isAnimating && !runtime.archiveSession?.isAnimating) {
     window.requestAnimationFrame(() => activeInput.focus());
   }
+
+  window.requestAnimationFrame(() => {
+    renderGoogleLoginButton();
+  });
 }
 
 function renderNav() {
@@ -630,8 +774,145 @@ function renderNav() {
         <button class="nav-link ${runtime.route === "study" ? "is-active" : ""}" data-route="study">단어 공부하기</button>
         <button class="nav-link ${runtime.route === "board" ? "is-active" : ""}" data-route="board">전체 오답 확인하기</button>
       </div>
+      ${renderAuthPanel()}
     </nav>
   `;
+}
+
+function renderAuthPanel() {
+  if (runtime.auth.user) {
+    return `
+      <div class="auth-panel is-signed-in">
+        <div class="auth-user">
+          ${
+            runtime.auth.user.picture
+              ? `<img class="auth-avatar" src="${escapeAttribute(runtime.auth.user.picture)}" alt="${escapeAttribute(runtime.auth.user.name || runtime.auth.user.email || "사용자")}" />`
+              : `<div class="auth-avatar auth-avatar-fallback">${escapeHtml((runtime.auth.user.name || runtime.auth.user.email || "U").slice(0, 1))}</div>`
+          }
+          <div class="auth-copy">
+            <strong>${escapeHtml(runtime.auth.user.name || "Google 사용자")}</strong>
+            <span>${escapeHtml(runtime.auth.user.email || "동기화 저장 사용 중")}</span>
+          </div>
+        </div>
+        <div class="auth-actions">
+          <div class="auth-note auth-note-inline">${escapeHtml(runtime.auth.syncMessage || "웹과 모바일에서 같은 계정 기록을 사용합니다.")}</div>
+          <button class="ghost-button auth-logout-button" data-action="logout">로그아웃</button>
+        </div>
+      </div>
+    `;
+  }
+
+  if (runtime.auth.status === "loading") {
+    return `
+      <div class="auth-panel">
+        <div class="auth-note">로그인 상태를 확인 중입니다.</div>
+      </div>
+    `;
+  }
+
+  if (!runtime.auth.clientId) {
+    return `
+      <div class="auth-panel">
+        <div class="auth-note">${escapeHtml(runtime.auth.error || "Google 로그인 설정이 필요합니다.")}</div>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="auth-panel">
+      <div class="google-signin-slot" id="google-signin-slot"></div>
+      <div class="auth-note">${escapeHtml(runtime.auth.error || "로그인하면 모바일과 웹 진행도가 같은 계정으로 동기화됩니다.")}</div>
+    </div>
+  `;
+}
+
+function renderGoogleLoginButton() {
+  if (runtime.auth.user || !runtime.auth.clientId) {
+    return;
+  }
+  if (!window.google?.accounts?.id) {
+    return;
+  }
+
+  const slot = document.getElementById("google-signin-slot");
+  if (!slot) {
+    return;
+  }
+
+  if (!runtime.auth.googleReady) {
+    window.google.accounts.id.initialize({
+      client_id: runtime.auth.clientId,
+      callback: handleGoogleCredentialResponse,
+      auto_select: false,
+      cancel_on_tap_outside: true,
+    });
+    runtime.auth.googleReady = true;
+  }
+
+  slot.innerHTML = "";
+  window.google.accounts.id.renderButton(slot, {
+    theme: "outline",
+    size: "large",
+    shape: "pill",
+    text: "signin_with",
+    width: Math.min(slot.clientWidth || 320, 320),
+  });
+}
+
+async function handleGoogleCredentialResponse(response) {
+  if (!response?.credential) {
+    runtime.auth.error = "Google 로그인 응답을 받지 못했습니다.";
+    render();
+    return;
+  }
+
+  runtime.auth.status = "loading";
+  runtime.auth.error = "";
+  render();
+
+  try {
+    const loginResponse = await fetch("/api/auth/google", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ credential: response.credential }),
+    });
+
+    if (!loginResponse.ok) {
+      throw new Error(`google-login ${loginResponse.status}`);
+    }
+
+    runtime.auth.syncMessage = "Google 계정으로 로그인했습니다.";
+    await restoreServerSession();
+  } catch (error) {
+    runtime.auth.status = "ready";
+    runtime.auth.user = null;
+    runtime.auth.error = "Google 로그인에 실패했습니다.";
+    runtime.auth.syncMessage = "";
+  }
+
+  render();
+}
+
+async function logout() {
+  runtime.auth.status = "loading";
+  render();
+
+  try {
+    await fetch("/api/logout", {
+      method: "POST",
+    });
+  } catch (error) {
+    // Ignore logout transport errors and clear the local auth view anyway.
+  }
+
+  runtime.auth.status = "ready";
+  runtime.auth.user = null;
+  runtime.auth.error = "";
+  runtime.auth.googleReady = false;
+  runtime.auth.syncMessage = "";
+  render();
 }
 
 function renderRoute() {
@@ -1346,6 +1627,10 @@ function escapeHtml(value) {
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;");
+}
+
+function escapeAttribute(value) {
+  return escapeHtml(value).replaceAll('"', "&quot;").replaceAll("'", "&#39;");
 }
 
 function startClock() {

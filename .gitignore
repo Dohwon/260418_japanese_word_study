@@ -1,5 +1,6 @@
 .codex
 node_modules/
+.data/
 DATA/ocr_dictionary_cache.json
 __pycache__/
 *.Zone.Identifier
