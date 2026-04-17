@@ -255,7 +255,7 @@ function buildStudyQueue() {
     ...shuffled(pools[4]).slice(0, 5),
   ];
 
-  return dedupeByUid(selected);
+  return dedupeByUid(selected).map((word) => word.uid);
 }
 
 function submitStudyAnswer(rawAnswer) {
