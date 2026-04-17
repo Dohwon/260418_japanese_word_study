@@ -1001,8 +1001,54 @@ tbody tr.is-wrong-5 td {
     grid-template-columns: 1fr;
   }
 
+  .deck-shell {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+      "card card"
+      "left right";
+    align-items: start;
+    gap: 16px;
+  }
+
+  .card-stage {
+    grid-area: card;
+  }
+
   .pile {
-    display: none;
+    display: grid;
+    justify-items: stretch;
+    gap: 10px;
+  }
+
+  .pile.is-left {
+    grid-area: left;
+  }
+
+  .pile.is-right {
+    grid-area: right;
+  }
+
+  .pile-stack {
+    width: min(100%, 220px);
+    height: 240px;
+    margin: 0 auto;
+  }
+
+  .pile-label,
+  .pile-count {
+    text-align: center;
+  }
+
+  .pile-mini-kanji {
+    font-size: 1.05rem;
+  }
+
+  .pile-mini-hiragana {
+    font-size: 1.35rem;
+  }
+
+  .pile-mini-meaning {
+    font-size: 0.88rem;
   }
 
   .archive-card-shell {
@@ -1110,6 +1156,19 @@ tbody tr.is-wrong-5 td {
 
   .nav-actions {
     grid-template-columns: 1fr;
+  }
+
+  .deck-shell {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "card"
+      "left"
+      "right";
+  }
+
+  .pile-stack {
+    width: min(100%, 210px);
+    height: 220px;
   }
 
   .hero,
