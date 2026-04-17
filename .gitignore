@@ -2,3 +2,5 @@
 DATA/ocr_dictionary_cache.json
 __pycache__/
 *.Zone.Identifier
+*:*Zone.Identifier
+REFERENCE/*:Zone.Identifier
