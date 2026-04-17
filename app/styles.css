@@ -1011,6 +1011,92 @@ tbody tr.is-wrong-5 td {
   }
 }
 
+@media (max-width: 900px) {
+  .shell {
+    width: min(100vw - 24px, 100%);
+  }
+
+  .nav {
+    flex-direction: column;
+    align-items: stretch;
+    border-radius: 30px;
+    padding: 18px;
+  }
+
+  .nav-brand,
+  .study-header,
+  .table-header,
+  .archive-header {
+    align-items: flex-start;
+  }
+
+  .nav-actions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 100%;
+  }
+
+  .nav-link {
+    width: 100%;
+    text-align: center;
+  }
+
+  .hero {
+    padding: 24px;
+    gap: 18px;
+  }
+
+  .hero-actions,
+  .tabs,
+  .mode-buttons,
+  .utility-row {
+    width: 100%;
+  }
+
+  .hero-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tabs,
+  .mode-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tab-button,
+  .mode-button,
+  .ghost-button {
+    width: 100%;
+    text-align: center;
+  }
+
+  .study-meta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .card-stage {
+    min-height: 520px;
+  }
+
+  .study-card,
+  .ghost-card,
+  .archive-card-shell {
+    width: min(100%, 540px);
+  }
+
+  .archive-card-stage {
+    justify-items: stretch;
+  }
+
+  .record-panel,
+  .table-panel,
+  .study-board,
+  .panel {
+    padding: 20px;
+  }
+}
+
 @media (max-width: 720px) {
   .shell {
     width: min(100vw - 20px, 100%);
@@ -1020,6 +1106,10 @@ tbody tr.is-wrong-5 td {
   .nav {
     border-radius: 28px;
     padding: 18px;
+  }
+
+  .nav-actions {
+    grid-template-columns: 1fr;
   }
 
   .hero,
@@ -1035,6 +1125,42 @@ tbody tr.is-wrong-5 td {
     font-size: 2.4rem;
   }
 
+  .hero-description,
+  .hero-card p,
+  .card-prompt,
+  .card-hint,
+  .archive-feedback,
+  .helper-text {
+    font-size: 0.96rem;
+  }
+
+  .hero-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-cta,
+  .hero-secondary,
+  .study-submit,
+  .primary-button {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .tabs,
+  .mode-buttons,
+  .study-meta {
+    grid-template-columns: 1fr;
+  }
+
+  .meta-pill,
+  .stat-card,
+  .hero-card,
+  .empty-card,
+  .archive-feedback {
+    border-radius: 24px;
+  }
+
   .study-card,
   .archive-card-shell .study-face {
     width: 100%;
@@ -1042,5 +1168,140 @@ tbody tr.is-wrong-5 td {
 
   .card-stage {
     min-height: 480px;
+  }
+
+  .study-face {
+    padding: 24px 20px;
+    border-radius: 28px;
+  }
+
+  .study-face::before {
+    inset: 12px;
+    border-radius: 20px;
+  }
+
+  .card-word .kanji {
+    font-size: clamp(3rem, 15vw, 4.2rem);
+  }
+
+  .card-word .hiragana {
+    font-size: 1.08rem;
+  }
+
+  .card-meaning {
+    font-size: 1.05rem;
+  }
+
+  .study-input {
+    padding: 16px 18px;
+    border-radius: 20px;
+  }
+
+  .study-form-row {
+    align-items: stretch;
+  }
+
+  .study-form-row .study-submit {
+    width: 100%;
+  }
+
+  th,
+  td {
+    padding: 12px 10px;
+    font-size: 0.94rem;
+  }
+}
+
+@media (max-width: 540px) {
+  .shell {
+    width: min(100vw - 16px, 100%);
+    padding-top: 10px;
+  }
+
+  .nav {
+    padding: 14px;
+    gap: 14px;
+  }
+
+  .nav-kana {
+    width: 44px;
+    height: 44px;
+    border-radius: 16px;
+    font-size: 1.3rem;
+  }
+
+  .nav-copy strong,
+  .section-heading strong {
+    font-size: 0.96rem;
+  }
+
+  .nav-copy span,
+  .section-heading span,
+  .table-caption {
+    font-size: 0.88rem;
+  }
+
+  .hero,
+  .panel,
+  .study-board,
+  .table-panel,
+  .record-panel {
+    padding: 16px;
+    border-radius: 22px;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .eyebrow,
+  .nav-link,
+  .tab-button,
+  .mode-button,
+  .ghost-button,
+  .action-button,
+  .table-badge {
+    font-size: 0.88rem;
+  }
+
+  .study-face {
+    padding: 20px 16px;
+    border-radius: 24px;
+  }
+
+  .study-face::before {
+    inset: 10px;
+    border-radius: 18px;
+  }
+
+  .card-stage {
+    min-height: 420px;
+  }
+
+  .card-topline,
+  .card-backline {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .card-index,
+  .card-badge {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .archive-card-shell .study-face {
+    min-height: 460px;
+  }
+
+  .record-table-wrap,
+  .table-wrap {
+    border-radius: 18px;
+  }
+
+  th,
+  td {
+    padding: 10px 8px;
+    font-size: 0.88rem;
   }
 }
