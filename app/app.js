@@ -186,10 +186,7 @@ function handleSubmit(event) {
 }
 
 function ensureStudySession() {
-  if (
-    runtime.studySession?.cards?.length &&
-    runtime.studySession.currentIndex < runtime.studySession.cards.length
-  ) {
+  if (runtime.studySession) {
     return;
   }
 
