@@ -720,7 +720,7 @@ function renderStudyDeck(current, total) {
 
   const cardClasses = ["study-card"];
   if (session.motion) {
-    cardClasses.push("is-flipped", session.motion);
+    cardClasses.push("is-revealed", session.motion);
   }
 
   return `
@@ -728,9 +728,7 @@ function renderStudyDeck(current, total) {
       <aside class="pile is-left">
         <div class="pile-label">오답 더미</div>
         <div class="pile-stack">
-          <div class="pile-card"></div>
-          <div class="pile-card"></div>
-          <div class="pile-card"></div>
+          ${renderPileStack(session.leftPile, "left")}
         </div>
         <div class="pile-count">${session.leftPile.length}장</div>
       </aside>
@@ -781,12 +779,45 @@ function renderStudyDeck(current, total) {
       <aside class="pile is-right">
         <div class="pile-label">정답 더미</div>
         <div class="pile-stack">
-          <div class="pile-card"></div>
-          <div class="pile-card"></div>
-          <div class="pile-card"></div>
+          ${renderPileStack(session.rightPile, "right")}
         </div>
         <div class="pile-count">${session.rightPile.length}장</div>
       </aside>
+    </div>
+  `;
+}
+
+function renderPileStack(pileIds, side) {
+  const previewIds = pileIds.slice(-3);
+  const emptyCount = Math.max(0, 3 - previewIds.length);
+  const cards = [];
+
+  for (let index = 0; index < emptyCount; index += 1) {
+    cards.push(`<div class="pile-card is-empty depth-${index + 1}"></div>`);
+  }
+
+  previewIds.forEach((wordId, index) => {
+    const depth = emptyCount + index + 1;
+    const word = wordMap.get(wordId);
+    cards.push(renderPileCard(word, side, depth));
+  });
+
+  return cards.join("");
+}
+
+function renderPileCard(word, side, depth) {
+  if (!word) {
+    return `<div class="pile-card is-empty depth-${depth}"></div>`;
+  }
+
+  const toneClass = side === "left" ? "is-wrong" : "is-correct";
+  return `
+    <div class="pile-card is-filled ${toneClass} depth-${depth}">
+      <div class="pile-card-face">
+        <div class="pile-mini-kanji">${escapeHtml(word.kanji)}</div>
+        <div class="pile-mini-hiragana">${escapeHtml(word.hiragana)}</div>
+        <div class="pile-mini-meaning">${escapeHtml(word.meaning)}</div>
+      </div>
     </div>
   `;
 }

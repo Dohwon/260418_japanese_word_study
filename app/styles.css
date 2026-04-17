@@ -456,8 +456,8 @@ button {
 
 .deck-shell {
   display: grid;
-  grid-template-columns: 180px minmax(0, 1fr) 180px;
-  gap: 20px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 18px;
   align-items: center;
 }
 
@@ -465,41 +465,99 @@ button {
   display: grid;
   gap: 12px;
   justify-items: center;
+  width: 100%;
 }
 
 .pile-stack {
   position: relative;
-  width: 148px;
-  height: 220px;
+  width: min(100%, 228px);
+  height: 292px;
 }
 
 .pile-card {
   position: absolute;
-  inset: auto 0 0 0;
-  height: 200px;
+  inset: 0;
   border-radius: 28px;
-  background: rgba(255, 255, 255, 0.6);
   box-shadow: 0 12px 24px rgba(74, 60, 126, 0.08);
+  overflow: hidden;
 }
 
-.pile-card:nth-child(1) {
+.pile-card.depth-1 {
   transform: translateY(20px) rotate(-7deg);
+  z-index: 1;
 }
 
-.pile-card:nth-child(2) {
+.pile-card.depth-2 {
   transform: translateY(10px) rotate(-3deg);
+  z-index: 2;
 }
 
-.pile-card:nth-child(3) {
+.pile-card.depth-3 {
   transform: rotate(2deg);
+  z-index: 3;
 }
 
-.pile.is-left .pile-card {
-  background: linear-gradient(180deg, rgba(255, 228, 233, 0.84) 0%, rgba(255, 247, 248, 0.84) 100%);
+.pile-card.is-empty {
+  background: rgba(255, 255, 255, 0.58);
 }
 
-.pile.is-right .pile-card {
-  background: linear-gradient(180deg, rgba(223, 248, 236, 0.88) 0%, rgba(250, 255, 252, 0.88) 100%);
+.pile-card.is-filled {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(246, 240, 255, 0.96) 100%);
+}
+
+.pile-card-face {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 10px;
+  padding: 26px 18px 22px;
+  text-align: center;
+}
+
+.pile-card-face::before {
+  content: "";
+  position: absolute;
+  inset: 14px;
+  border-radius: 22px;
+  z-index: 0;
+}
+
+.pile-card-face > * {
+  position: relative;
+  z-index: 1;
+}
+
+.pile.is-left .pile-card.is-filled .pile-card-face::before {
+  background: linear-gradient(180deg, rgba(255, 228, 233, 0.96) 0%, rgba(255, 244, 246, 0.96) 100%);
+}
+
+.pile.is-right .pile-card.is-filled .pile-card-face::before {
+  background: linear-gradient(180deg, rgba(223, 248, 236, 0.96) 0%, rgba(248, 255, 251, 0.96) 100%);
+}
+
+.pile-mini-kanji {
+  font-family: var(--jp-font);
+  font-size: 1.2rem;
+  color: rgba(74, 60, 126, 0.72);
+}
+
+.pile-mini-hiragana {
+  font-family: var(--jp-font);
+  font-size: 1.6rem;
+  line-height: 1.2;
+  color: var(--primary-strong);
+}
+
+.pile-mini-meaning {
+  font-size: 0.94rem;
+  line-height: 1.45;
+  color: var(--text);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  overflow: hidden;
 }
 
 .pile-label {
@@ -544,28 +602,21 @@ button {
 
 .study-card {
   position: relative;
-  width: min(100%, 520px);
+  width: min(100%, 480px);
   aspect-ratio: 0.78;
-  perspective: 1400px;
 }
 
 .study-card-inner {
   position: absolute;
   inset: 0;
-  transform-style: preserve-3d;
-  transition: transform 0.6s ease;
 }
 
-.study-card.is-flipped .study-card-inner {
-  transform: rotateY(180deg);
+.study-card.is-right {
+  animation: study-card-right 0.82s ease 0.16s forwards;
 }
 
-.study-card.is-right .study-card-inner {
-  animation: study-card-right 0.98s ease forwards;
-}
-
-.study-card.is-left .study-card-inner {
-  animation: study-card-left 0.98s ease forwards;
+.study-card.is-left {
+  animation: study-card-left 0.82s ease 0.16s forwards;
 }
 
 .study-face {
@@ -574,10 +625,10 @@ button {
   display: grid;
   padding: 34px 32px;
   border-radius: 36px;
-  backface-visibility: hidden;
   overflow: hidden;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(246, 240, 255, 0.96) 100%);
   box-shadow: var(--shadow);
+  transition: opacity 0.22s ease, transform 0.28s ease;
 }
 
 .study-face::before {
@@ -597,10 +648,26 @@ button {
   height: 100%;
 }
 
+.study-face.front {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
 .study-face.back {
-  transform: rotateY(180deg);
+  opacity: 0;
+  transform: rotate(-4deg) scale(0.94);
   background: linear-gradient(160deg, rgba(93, 79, 192, 0.95) 0%, rgba(140, 125, 255, 0.95) 100%);
   color: #fff;
+}
+
+.study-card.is-revealed .study-face.front {
+  opacity: 0;
+  transform: rotate(-6deg) scale(0.92);
+}
+
+.study-card.is-revealed .study-face.back {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
 }
 
 .study-face.back::before {
@@ -838,39 +905,23 @@ tbody tr {
 
 @keyframes study-card-right {
   0% {
-    transform: rotateY(0deg) translate3d(0, 0, 0);
-    opacity: 1;
-  }
-  38% {
-    transform: rotateY(180deg) translate3d(0, 0, 0);
-    opacity: 1;
-  }
-  62% {
-    transform: rotateY(180deg) translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
     opacity: 1;
   }
   100% {
-    transform: rotateY(180deg) translate3d(220px, -8px, 0);
-    opacity: 0;
+    transform: translate3d(210px, -6px, 0) scale(0.82) rotate(10deg);
+    opacity: 1;
   }
 }
 
 @keyframes study-card-left {
   0% {
-    transform: rotateY(0deg) translate3d(0, 0, 0);
-    opacity: 1;
-  }
-  38% {
-    transform: rotateY(180deg) translate3d(0, 0, 0);
-    opacity: 1;
-  }
-  62% {
-    transform: rotateY(180deg) translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
     opacity: 1;
   }
   100% {
-    transform: rotateY(180deg) translate3d(-220px, 8px, 0);
-    opacity: 0;
+    transform: translate3d(-210px, 6px, 0) scale(0.82) rotate(-10deg);
+    opacity: 1;
   }
 }
 
