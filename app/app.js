@@ -6,6 +6,39 @@ const REVIEW_INTERVALS = {
   3: 7 * 24 * 60 * 60 * 1000,
   4: 14 * 24 * 60 * 60 * 1000,
 };
+const MEANING_SYNONYM_GROUPS = [
+  ["사이", "간격"],
+  ["뜻", "의미"],
+  ["색", "색깔"],
+  ["아침밥", "아침 식사", "조식"],
+  ["점심밥", "점심 식사", "중식"],
+  ["저녁밥", "저녁 식사", "석식"],
+  ["바깥", "밖", "외부"],
+  ["뒤", "후방", "후면", "뒷쪽", "뒷편"],
+  ["나중", "이후", "뒤에"],
+  ["저기", "저곳"],
+  ["저쪽", "저편"],
+  ["집", "가옥", "주택", "댁"],
+  ["아기", "유아"],
+  ["아이", "어린이", "아동"],
+  ["개", "강아지", "견"],
+  ["바다", "해양"],
+  ["겉옷", "상의", "웃옷"],
+  ["그림", "삽화"],
+  ["동반자", "파트너"],
+  ["모임", "집회"],
+  ["사랑", "애정"],
+  ["돈", "금전"],
+  ["의자", "걸상"],
+  ["연못", "못"],
+  ["회사", "기업"],
+  ["꽃병", "화병"],
+  ["소고기", "쇠고기"],
+  ["꽃", "화"],
+  ["소", "쇠"],
+];
+const MEANING_IGNORABLE_TOKENS = new Set(["그", "이", "저"]);
+const MEANING_SYNONYM_MAP = buildMeaningSynonymMap();
 
 const root = document.getElementById("app");
 
@@ -17,13 +50,14 @@ const runtime = {
   archiveSession: null,
   timerId: null,
 };
+const semanticDecisionCache = new Map();
 
 const levelCatalog = buildLevelCatalog();
 const words = LEVELS.flatMap((level) => levelCatalog[level] || []);
 const wordMap = new Map(words.map((word) => [word.uid, word]));
 let state = hydrateState();
 
-syncRoute();
+initializeRoute();
 window.addEventListener("hashchange", syncRoute);
 root.addEventListener("click", handleClick);
 root.addEventListener("submit", handleSubmit);
@@ -87,6 +121,18 @@ function hydrateState() {
 
 function saveState() {
   localStorage.setItem(APP_STORAGE_KEY, JSON.stringify(state));
+}
+
+function initializeRoute() {
+  runtime.route = "home";
+  if (!window.location.hash) {
+    return;
+  }
+  if (window.history?.replaceState) {
+    window.history.replaceState(null, "", `${window.location.pathname || ""}${window.location.search || ""}`);
+    return;
+  }
+  window.location.hash = "";
 }
 
 function syncRoute() {
@@ -173,15 +219,15 @@ function handleClick(event) {
   }
 }
 
-function handleSubmit(event) {
+async function handleSubmit(event) {
   event.preventDefault();
   const form = event.target;
   const answer = new FormData(form).get("answer");
   if (form.dataset.form === "study-answer") {
-    submitStudyAnswer(String(answer || ""));
+    await submitStudyAnswer(String(answer || ""));
   }
   if (form.dataset.form === "archive-answer") {
-    submitArchiveAnswer(String(answer || ""));
+    await submitArchiveAnswer(String(answer || ""));
   }
 }
 
@@ -267,7 +313,7 @@ function buildStudyQueue() {
   return dedupeByUid(selected).map((word) => word.uid);
 }
 
-function submitStudyAnswer(rawAnswer) {
+async function submitStudyAnswer(rawAnswer) {
   ensureStudySession();
   const session = runtime.studySession;
   if (!session || session.isAnimating) {
@@ -286,10 +332,19 @@ function submitStudyAnswer(rawAnswer) {
     return;
   }
 
-  const isCorrect = isMeaningMatch(answer, word.meaning);
+  session.isAnimating = true;
+  session.message = "정답 판정 중입니다.";
+  render();
+
+  const match = await determineMeaningMatch(answer, word.meaning);
+  if (runtime.studySession !== session || getCurrentStudyWord()?.uid !== word.uid) {
+    return;
+  }
+
+  const isCorrect = match.isCorrect;
   session.isAnimating = true;
   session.motion = isCorrect ? "is-right" : "is-left";
-  session.message = isCorrect ? "정답입니다. 오른쪽 더미로 보냅니다." : "틀렸습니다. 왼쪽 더미로 보냅니다.";
+  session.message = getStudyResultMessage(isCorrect, match.mode);
   render();
 
   window.setTimeout(() => {
@@ -344,7 +399,7 @@ function startArchiveSession() {
   };
 }
 
-function submitArchiveAnswer(rawAnswer) {
+async function submitArchiveAnswer(rawAnswer) {
   const session = runtime.archiveSession;
   if (!session || session.isAnimating) {
     return;
@@ -363,8 +418,17 @@ function submitArchiveAnswer(rawAnswer) {
     return;
   }
 
-  const isCorrect = isMeaningMatch(answer, word.meaning);
   session.isAnimating = true;
+  session.feedback = "정답 판정 중입니다.";
+  session.messageTone = "";
+  render();
+
+  const match = await determineMeaningMatch(answer, word.meaning);
+  if (runtime.archiveSession !== session || session.cards[session.currentIndex]?.uid !== word.uid) {
+    return;
+  }
+
+  const isCorrect = match.isCorrect;
   session.motion = isCorrect ? "correct" : "wrong";
   render();
 
@@ -372,7 +436,7 @@ function submitArchiveAnswer(rawAnswer) {
     registerArchiveAttempt(word.uid, isCorrect);
 
     if (isCorrect) {
-      session.feedback = `${word.kanji}를 맞혔습니다. 다음 카드로 넘어갑니다.`;
+      session.feedback = getArchiveResultMessage(word.kanji, match.mode);
       session.messageTone = "success";
       session.currentIndex += 1;
     } else {
@@ -410,6 +474,59 @@ function submitArchiveAnswer(rawAnswer) {
 
     render();
   }, 520);
+}
+
+async function determineMeaningMatch(answer, meaning) {
+  if (isMeaningMatch(answer, meaning)) {
+    return { isCorrect: true, mode: "heuristic" };
+  }
+
+  const cacheKey = `${compactString(answer)}::${compactString(meaning)}`;
+  if (semanticDecisionCache.has(cacheKey)) {
+    return semanticDecisionCache.get(cacheKey);
+  }
+
+  try {
+    const response = await fetch("/api/meaning-match", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ answer, meaning }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`meaning-match ${response.status}`);
+    }
+
+    const payload = await response.json();
+    const result = {
+      isCorrect: Boolean(payload.isCorrect),
+      mode: payload.mode || "semantic",
+      score: Number(payload.score) || 0,
+    };
+    semanticDecisionCache.set(cacheKey, result);
+    return result;
+  } catch (error) {
+    return { isCorrect: false, mode: "fallback" };
+  }
+}
+
+function getStudyResultMessage(isCorrect, mode) {
+  if (!isCorrect) {
+    return "틀렸습니다. 왼쪽 더미로 보냅니다.";
+  }
+  if (mode === "semantic") {
+    return "의미가 비슷해서 정답 처리했습니다. 오른쪽 더미로 보냅니다.";
+  }
+  return "정답입니다. 오른쪽 더미로 보냅니다.";
+}
+
+function getArchiveResultMessage(kanji, mode) {
+  if (mode === "semantic") {
+    return `${kanji}를 의미 유사도로 정답 처리했습니다. 다음 카드로 넘어갑니다.`;
+  }
+  return `${kanji}를 맞혔습니다. 다음 카드로 넘어갑니다.`;
 }
 
 function registerArchiveAttempt(wordId, isCorrect) {
@@ -981,11 +1098,12 @@ function renderProgressTable(items) {
         <tbody>
           ${
             items.length
-              ? items
-                  .map((word) => {
-                    const record = state.progress[word.uid];
-                    return `
-                      <tr>
+                ? items
+                    .map((word) => {
+                      const record = state.progress[word.uid];
+                      const rowClass = getWrongHighlightClass(record.wrongHits);
+                      return `
+                      <tr class="${rowClass}">
                         <td class="jp-inline">${escapeHtml(word.kanji)}</td>
                         <td class="jp-inline">${escapeHtml(word.hiragana)}</td>
                         <td>${escapeHtml(word.meaning)}</td>
@@ -1006,6 +1124,22 @@ function renderProgressTable(items) {
       </table>
     </div>
   `;
+}
+
+function getWrongHighlightClass(wrongHits) {
+  if (wrongHits >= 5) {
+    return "is-wrong-5";
+  }
+  if (wrongHits === 4) {
+    return "is-wrong-4";
+  }
+  if (wrongHits === 3) {
+    return "is-wrong-3";
+  }
+  if (wrongHits === 2) {
+    return "is-wrong-2";
+  }
+  return "";
 }
 
 function renderCompletedTable(items) {
@@ -1083,16 +1217,20 @@ function isMeaningMatch(answer, meaning) {
 }
 
 function buildMeaningTokens(value) {
-  const normalized = normalizeText(value)
+  const normalized = canonicalizeMeaningText(
+    normalizeText(value)
     .replace(/[()]/g, " ")
     .replace(/[\u00b7/|]/g, " ")
-    .replace(/,/g, " ");
+    .replace(/,/g, " "),
+  );
 
   return normalized
     .split(/\s+/)
     .map((token) => token.trim())
     .filter(Boolean)
     .map(stripParticle)
+    .map(canonicalizeMeaningToken)
+    .filter((token) => !MEANING_IGNORABLE_TOKENS.has(token))
     .filter(Boolean);
 }
 
@@ -1109,7 +1247,31 @@ function stripParticle(token) {
 }
 
 function compactString(value) {
-  return normalizeText(value).replace(/\s+/g, "");
+  return canonicalizeMeaningText(normalizeText(value)).replace(/\s+/g, "");
+}
+
+function buildMeaningSynonymMap() {
+  const map = new Map();
+  for (const group of MEANING_SYNONYM_GROUPS) {
+    const canonical = group[0];
+    for (const token of group) {
+      map.set(token, canonical);
+    }
+  }
+  return map;
+}
+
+function canonicalizeMeaningText(value) {
+  let normalized = value;
+  const entries = [...MEANING_SYNONYM_MAP.entries()].sort((left, right) => right[0].length - left[0].length);
+  for (const [alias, canonical] of entries) {
+    normalized = normalized.replaceAll(alias, canonical);
+  }
+  return normalized;
+}
+
+function canonicalizeMeaningToken(token) {
+  return MEANING_SYNONYM_MAP.get(token) || token;
 }
 
 function dedupeByUid(items) {
