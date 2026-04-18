@@ -21,7 +21,7 @@
     "id": 3,
     "kanji": "中",
     "hiragana": "なか",
-    "meaning": "내부, 내부, 사이",
+    "meaning": "내부, 사이",
     "day": 1,
     "level": "N3",
     "page": 2
@@ -39,7 +39,7 @@
     "id": 5,
     "kanji": "愛用者",
     "hiragana": "あいようしゃ",
-    "meaning": "일반 사용자, 호의(호의)(무언가)를 좋아하는 사람",
+    "meaning": "일반 사용자, 호의",
     "day": 1,
     "level": "N3",
     "page": 2
@@ -57,7 +57,7 @@
     "id": 7,
     "kanji": "空き地",
     "hiragana": "あきち",
-    "meaning": "빈 땅, 비어 있는 땅, 비어 있는 땅",
+    "meaning": "빈 땅, 비어 있는 땅",
     "day": 1,
     "level": "N3",
     "page": 2
@@ -66,7 +66,7 @@
     "id": 8,
     "kanji": "あくび",
     "hiragana": "あくび",
-    "meaning": "하품, 하품, 한자 \"하품\" 부수(부수 76",
+    "meaning": "하품",
     "day": 1,
     "level": "N3",
     "page": 2
@@ -102,7 +102,7 @@
     "id": 12,
     "kanji": "足元",
     "hiragana": "あしもと",
-    "meaning": "발밑에, 발밑에, 발밑에('발걸음을 조심하세요'에서와 같이)",
+    "meaning": "발밑에",
     "day": 1,
     "level": "N3",
     "page": 2
@@ -120,7 +120,7 @@
     "id": 14,
     "kanji": "悪化",
     "hiragana": "あっか",
-    "meaning": "악화되다, 악화되다, 악화되다",
+    "meaning": "악화되다",
     "day": 1,
     "level": "N3",
     "page": 2
@@ -129,7 +129,7 @@
     "id": 15,
     "kanji": "集まり",
     "hiragana": "あつまり",
-    "meaning": "모임, 회의, 모임",
+    "meaning": "모임, 회의",
     "day": 1,
     "level": "N3",
     "page": 2
@@ -147,7 +147,7 @@
     "id": 17,
     "kanji": "導",
     "hiragana": "しるべ",
-    "meaning": "안내하다, 안내하다",
+    "meaning": "안내하다",
     "day": 1,
     "level": "N3",
     "page": 2
@@ -174,7 +174,7 @@
     "id": 20,
     "kanji": "網戸",
     "hiragana": "あみど",
-    "meaning": "방충망, 방충망, 모기장",
+    "meaning": "방충망, 모기장",
     "day": 1,
     "level": "N3",
     "page": 2
@@ -183,7 +183,7 @@
     "id": 21,
     "kanji": "あれこれ",
     "hiragana": "あれこれ",
-    "meaning": "이것저것, 이것저것, 이것저것",
+    "meaning": "이것저것",
     "day": 1,
     "level": "N3",
     "page": 2
@@ -192,7 +192,7 @@
     "id": 22,
     "kanji": "泡",
     "hiragana": "あわ",
-    "meaning": "거품, 거품, 거품",
+    "meaning": "거품",
     "day": 1,
     "level": "N3",
     "page": 2
@@ -201,7 +201,7 @@
     "id": 23,
     "kanji": "暗記",
     "hiragana": "あんき",
-    "meaning": "암기, 암기, 마음으로 학습",
+    "meaning": "암기, 마음으로 학습",
     "day": 1,
     "level": "N3",
     "page": 3
@@ -210,7 +210,7 @@
     "id": 24,
     "kanji": "怒り",
     "hiragana": "いかり",
-    "meaning": "분노, 분노, 분노",
+    "meaning": "분노",
     "day": 1,
     "level": "N3",
     "page": 3
@@ -219,7 +219,7 @@
     "id": 25,
     "kanji": "息",
     "hiragana": "いき",
-    "meaning": "호흡, 호흡, 조화",
+    "meaning": "호흡, 조화",
     "day": 1,
     "level": "N3",
     "page": 3
@@ -237,7 +237,7 @@
     "id": 27,
     "kanji": "生き物",
     "hiragana": "いきもの",
-    "meaning": "생물, 생물, 동물",
+    "meaning": "생물, 동물",
     "day": 1,
     "level": "N3",
     "page": 3
@@ -246,7 +246,7 @@
     "id": 28,
     "kanji": "育児",
     "hiragana": "いくじ",
-    "meaning": "육아, 육아, 간호",
+    "meaning": "육아, 간호",
     "day": 1,
     "level": "N3",
     "page": 3
@@ -282,7 +282,7 @@
     "id": 32,
     "kanji": "医師",
     "hiragana": "いし",
-    "meaning": "의사, 의사",
+    "meaning": "의사",
     "day": 1,
     "level": "N3",
     "page": 3
@@ -291,7 +291,7 @@
     "id": 33,
     "kanji": "意志",
     "hiragana": "いし",
-    "meaning": "의지, 의지, 의지",
+    "meaning": "의지",
     "day": 1,
     "level": "N3",
     "page": 3
@@ -309,7 +309,7 @@
     "id": 35,
     "kanji": "以前",
     "hiragana": "いぜん",
-    "meaning": "이전에, 이전에, 이전에",
+    "meaning": "이전에",
     "day": 1,
     "level": "N3",
     "page": 3
@@ -318,7 +318,7 @@
     "id": 36,
     "kanji": "痛み",
     "hiragana": "いたみ",
-    "meaning": "통증, 아픔, 아픔",
+    "meaning": "통증, 아픔",
     "day": 1,
     "level": "N3",
     "page": 3
@@ -327,7 +327,7 @@
     "id": 37,
     "kanji": "位置",
     "hiragana": "いち",
-    "meaning": "장소, 위치, 장소",
+    "meaning": "장소, 위치",
     "day": 1,
     "level": "N3",
     "page": 3
@@ -345,7 +345,7 @@
     "id": 39,
     "kanji": "品",
     "hiragana": "しな",
-    "meaning": "기사, 물건, 물건",
+    "meaning": "기사, 물건",
     "day": 1,
     "level": "N3",
     "page": 3
@@ -372,7 +372,7 @@
     "id": 42,
     "kanji": "移動",
     "hiragana": "いどう",
-    "meaning": "이동, 이동, 이주",
+    "meaning": "이동, 이주",
     "day": 1,
     "level": "N3",
     "page": 4
@@ -399,7 +399,7 @@
     "id": 45,
     "kanji": "医療",
     "hiragana": "いりょう",
-    "meaning": "의료, 의료",
+    "meaning": "의료",
     "day": 1,
     "level": "N3",
     "page": 4
@@ -435,7 +435,7 @@
     "id": 49,
     "kanji": "うさぎ",
     "hiragana": "うさぎ",
-    "meaning": "토끼, 토끼, 코니",
+    "meaning": "토끼, 코니",
     "day": 1,
     "level": "N3",
     "page": 4
@@ -444,7 +444,7 @@
     "id": 50,
     "kanji": "右折",
     "hiragana": "うせつ",
-    "meaning": "우회전, 우회전",
+    "meaning": "우회전",
     "day": 1,
     "level": "N3",
     "page": 4
@@ -453,7 +453,7 @@
     "id": 51,
     "kanji": "うそつき",
     "hiragana": "うそつき",
-    "meaning": "거짓말쟁이, 거짓말쟁이, 거짓말쟁이",
+    "meaning": "거짓말쟁이",
     "day": 1,
     "level": "N3",
     "page": 4
@@ -462,7 +462,7 @@
     "id": 52,
     "kanji": "内側",
     "hiragana": "うちがわ",
-    "meaning": "내부, 내부, 내부 부분",
+    "meaning": "내부, 내부 부분",
     "day": 1,
     "level": "N3",
     "page": 4
@@ -471,7 +471,7 @@
     "id": 53,
     "kanji": "生まれ",
     "hiragana": "うまれ",
-    "meaning": "출생, 태어난 곳, (나라)에서 태어났다",
+    "meaning": "출생, 태어난 곳, 에서 태어났다",
     "day": 1,
     "level": "N3",
     "page": 4
@@ -480,7 +480,7 @@
     "id": 54,
     "kanji": "梅",
     "hiragana": "うめ",
-    "meaning": "매실(매실,매실,매실)",
+    "meaning": "매실(매실, 매실, 매실)",
     "day": 1,
     "level": "N3",
     "page": 4
@@ -507,7 +507,7 @@
     "id": 57,
     "kanji": "うわさ",
     "hiragana": "うわさ",
-    "meaning": "소문, 소문, 보고",
+    "meaning": "소문, 보고",
     "day": 1,
     "level": "N3",
     "page": 5
@@ -543,7 +543,7 @@
     "id": 61,
     "kanji": "運転免許",
     "hiragana": "うんてんめんきょ",
-    "meaning": "운전 면허증, 운전 면허증, 운전 면허증",
+    "meaning": "운전 면허증",
     "day": 1,
     "level": "N3",
     "page": 5
@@ -552,7 +552,7 @@
     "id": 62,
     "kanji": "永遠",
     "hiragana": "えいえん",
-    "meaning": "영원, 영속, 영속",
+    "meaning": "영원, 영속",
     "day": 2,
     "level": "N3",
     "page": 6
@@ -561,7 +561,7 @@
     "id": 63,
     "kanji": "影響",
     "hiragana": "えいきょう",
-    "meaning": "영향, 영향, 영향",
+    "meaning": "영향",
     "day": 2,
     "level": "N3",
     "page": 6
@@ -570,7 +570,7 @@
     "id": 64,
     "kanji": "英国",
     "hiragana": "えいこく",
-    "meaning": "영국, 영국, 영국",
+    "meaning": "영국",
     "day": 2,
     "level": "N3",
     "page": 6
@@ -588,7 +588,7 @@
     "id": 66,
     "kanji": "栄養",
     "hiragana": "えいよう",
-    "meaning": "영양, 영양",
+    "meaning": "영양",
     "day": 2,
     "level": "N3",
     "page": 6
@@ -615,7 +615,7 @@
     "id": 69,
     "kanji": "延期",
     "hiragana": "えんき",
-    "meaning": "연기, 연기, 연기",
+    "meaning": "연기",
     "day": 2,
     "level": "N3",
     "page": 6
@@ -624,7 +624,7 @@
     "id": 70,
     "kanji": "演劇",
     "hiragana": "えんげき",
-    "meaning": "드라마, 극장, 극장",
+    "meaning": "드라마, 극장",
     "day": 2,
     "level": "N3",
     "page": 6
@@ -660,7 +660,7 @@
     "id": 74,
     "kanji": "お祝い",
     "hiragana": "おいわい",
-    "meaning": "축하하다, 축하하다, 축하하다",
+    "meaning": "축하하다",
     "day": 2,
     "level": "N3",
     "page": 6
@@ -669,7 +669,7 @@
     "id": 75,
     "kanji": "応援",
     "hiragana": "おうえん",
-    "meaning": "원조, 도움, 도움",
+    "meaning": "원조, 도움",
     "day": 2,
     "level": "N3",
     "page": 6
@@ -714,7 +714,7 @@
     "id": 80,
     "kanji": "応募",
     "hiragana": "おうぼ",
-    "meaning": "신청,구독,참가(대회",
+    "meaning": "신청, 구독, 참가(대회",
     "day": 2,
     "level": "N3",
     "page": 6
@@ -741,7 +741,7 @@
     "id": 83,
     "kanji": "大家",
     "hiragana": "おおや",
-    "meaning": "집주인, 집주인",
+    "meaning": "집주인",
     "day": 2,
     "level": "N3",
     "page": 7
@@ -750,7 +750,7 @@
     "id": 84,
     "kanji": "内",
     "hiragana": "うち",
-    "meaning": "내부, 내부, 동안(예: 사람은 젊습니다.",
+    "meaning": "내부, 동안(예: 사람은 젊습니다.",
     "day": 2,
     "level": "N3",
     "page": 7
@@ -804,7 +804,7 @@
     "id": 90,
     "kanji": "お尻",
     "hiragana": "おしり",
-    "meaning": "엉덩이, 엉덩이, 비데 기능(항문 세정용)",
+    "meaning": "엉덩이, 비데 기능(항문 세정용)",
     "day": 2,
     "level": "N3",
     "page": 7
@@ -876,7 +876,7 @@
     "id": 98,
     "kanji": "温室",
     "hiragana": "おんしつ",
-    "meaning": "온실, 온실, 온실",
+    "meaning": "온실",
     "day": 2,
     "level": "N3",
     "page": 7
@@ -885,7 +885,7 @@
     "id": 99,
     "kanji": "温泉",
     "hiragana": "おんせん",
-    "meaning": "온천, 온천, 온천 휴양지",
+    "meaning": "온천, 온천 휴양지",
     "day": 2,
     "level": "N3",
     "page": 7
@@ -903,7 +903,7 @@
     "id": 101,
     "kanji": "おんぶ",
     "hiragana": "おんぶ",
-    "meaning": "(누군가를) 등에 업고 (특히 아이를) 업다, 업고 타다, (누군가에게 의지하다)",
+    "meaning": "등에 업고 (특히 아이를) 업다, 업고 타다",
     "day": 2,
     "level": "N3",
     "page": 7
@@ -930,7 +930,7 @@
     "id": 104,
     "kanji": "絵画",
     "hiragana": "かいが",
-    "meaning": "그림, 그림",
+    "meaning": "그림",
     "day": 2,
     "level": "N3",
     "page": 7
@@ -939,7 +939,7 @@
     "id": 105,
     "kanji": "海外",
     "hiragana": "かいがい",
-    "meaning": "외국, 해외, 해외",
+    "meaning": "외국, 해외",
     "day": 2,
     "level": "N3",
     "page": 8
@@ -957,7 +957,7 @@
     "id": 107,
     "kanji": "な",
     "hiragana": "な",
-    "meaning": "채소, 채소, 유채(브라시카 나푸스(Brassica napus)",
+    "meaning": "채소, 유채(브라시카 나푸스(Brassica napus)",
     "day": 2,
     "level": "N3",
     "page": 8
@@ -966,7 +966,7 @@
     "id": 108,
     "kanji": "解決",
     "hiragana": "かいけつ",
-    "meaning": "해결, 해결, 결의",
+    "meaning": "해결, 결의",
     "day": 2,
     "level": "N3",
     "page": 8
@@ -1002,7 +1002,7 @@
     "id": 112,
     "kanji": "回収",
     "hiragana": "かいしゅう",
-    "meaning": "수집, 회수, 회수",
+    "meaning": "수집, 회수",
     "day": 2,
     "level": "N3",
     "page": 8
@@ -1020,7 +1020,7 @@
     "id": 114,
     "kanji": "外食",
     "hiragana": "がいしょく",
-    "meaning": "외식하다, 외식하다",
+    "meaning": "외식하다",
     "day": 2,
     "level": "N3",
     "page": 8
@@ -1029,7 +1029,7 @@
     "id": 115,
     "kanji": "海水浴",
     "hiragana": "かいすいよく",
-    "meaning": "바다 수영, 해수욕, 해수욕",
+    "meaning": "바다 수영, 해수욕",
     "day": 2,
     "level": "N3",
     "page": 8
@@ -1038,7 +1038,7 @@
     "id": 116,
     "kanji": "回数",
     "hiragana": "かいすう",
-    "meaning": "횟수, 빈도, 횟수",
+    "meaning": "횟수, 빈도",
     "day": 2,
     "level": "N3",
     "page": 8
@@ -1047,7 +1047,7 @@
     "id": 117,
     "kanji": "解説",
     "hiragana": "かいせつ",
-    "meaning": "설명, 해설, 해설",
+    "meaning": "설명, 해설",
     "day": 2,
     "level": "N3",
     "page": 8
@@ -1065,7 +1065,7 @@
     "id": 119,
     "kanji": "な",
     "hiragana": "な",
-    "meaning": "채소, 채소, 유채(브라시카 나푸스(Brassica napus)",
+    "meaning": "채소, 유채(브라시카 나푸스(Brassica napus)",
     "day": 2,
     "level": "N3",
     "page": 8
@@ -1074,7 +1074,7 @@
     "id": 120,
     "kanji": "香り",
     "hiragana": "かおり",
-    "meaning": "방향, 향기, 향기",
+    "meaning": "방향, 향기",
     "day": 2,
     "level": "N3",
     "page": 8
@@ -1119,7 +1119,7 @@
     "id": 125,
     "kanji": "書留",
     "hiragana": "かきとめ",
-    "meaning": "등기우편, 등기우편, 등록(우편물)",
+    "meaning": "등기우편, 등록(우편물)",
     "day": 2,
     "level": "N3",
     "page": 8
@@ -1146,7 +1146,7 @@
     "id": 128,
     "kanji": "上",
     "hiragana": "うえ",
-    "meaning": "위에, 위에, 위로",
+    "meaning": "위에, 위로",
     "day": 2,
     "level": "N3",
     "page": 8
@@ -1173,7 +1173,7 @@
     "id": 131,
     "kanji": "学者",
     "hiragana": "がくしゃ",
-    "meaning": "학자, 학자, 과학자",
+    "meaning": "학자, 과학자",
     "day": 2,
     "level": "N3",
     "page": 9
@@ -1191,7 +1191,7 @@
     "id": 133,
     "kanji": "拡大",
     "hiragana": "かくだい",
-    "meaning": "확장, 확장, 확대",
+    "meaning": "확장, 확대",
     "day": 2,
     "level": "N3",
     "page": 9
@@ -1200,7 +1200,7 @@
     "id": 134,
     "kanji": "各地",
     "hiragana": "かくち",
-    "meaning": "모든 장소, 모든 장소, 다양한 장소",
+    "meaning": "모든 장소, 다양한 장소",
     "day": 2,
     "level": "N3",
     "page": 9
@@ -1209,7 +1209,7 @@
     "id": 135,
     "kanji": "確認",
     "hiragana": "かくにん",
-    "meaning": "확인, 확인, 검증",
+    "meaning": "확인, 검증",
     "day": 3,
     "level": "N3",
     "page": 10
@@ -1245,7 +1245,7 @@
     "id": 139,
     "kanji": "格安",
     "hiragana": "かくやす",
-    "meaning": "매우) 저렴하다, 매우) 저렴하다, 할인된 가격",
+    "meaning": "매우) 저렴하다, 할인된 가격",
     "day": 3,
     "level": "N3",
     "page": 10
@@ -1299,7 +1299,7 @@
     "id": 145,
     "kanji": "火災",
     "hiragana": "かさい",
-    "meaning": "화재, 화재",
+    "meaning": "화재",
     "day": 3,
     "level": "N3",
     "page": 10
@@ -1308,7 +1308,7 @@
     "id": 146,
     "kanji": "貸し出し",
     "hiragana": "かしだし",
-    "meaning": "대출, 대출",
+    "meaning": "대출",
     "day": 3,
     "level": "N3",
     "page": 10
@@ -1317,7 +1317,7 @@
     "id": 147,
     "kanji": "下線",
     "hiragana": "かせん",
-    "meaning": "밑줄, 밑줄",
+    "meaning": "밑줄",
     "day": 3,
     "level": "N3",
     "page": 10
@@ -1344,7 +1344,7 @@
     "id": 150,
     "kanji": "課題",
     "hiragana": "かだい",
-    "meaning": "주제, 주제, 문제",
+    "meaning": "주제, 문제",
     "day": 3,
     "level": "N3",
     "page": 10
@@ -1362,7 +1362,7 @@
     "id": 152,
     "kanji": "片方",
     "hiragana": "かたほう",
-    "meaning": "한쪽, 한쪽, 다른쪽",
+    "meaning": "한쪽, 다른쪽",
     "day": 3,
     "level": "N3",
     "page": 10
@@ -1380,7 +1380,7 @@
     "id": 154,
     "kanji": "価値",
     "hiragana": "かち",
-    "meaning": "가치, 가치, 장점",
+    "meaning": "가치, 장점",
     "day": 3,
     "level": "N3",
     "page": 10
@@ -1389,7 +1389,7 @@
     "id": 155,
     "kanji": "勝ち",
     "hiragana": "かち",
-    "meaning": "승리하다, 승리하다",
+    "meaning": "승리하다",
     "day": 3,
     "level": "N3",
     "page": 10
@@ -1416,7 +1416,7 @@
     "id": 158,
     "kanji": "格好",
     "hiragana": "かっこう",
-    "meaning": "모양, 형태, 모양",
+    "meaning": "모양, 형태",
     "day": 3,
     "level": "N3",
     "page": 11
@@ -1434,7 +1434,7 @@
     "id": 160,
     "kanji": "仮定",
     "hiragana": "かてい",
-    "meaning": "가정, 가정, 가설",
+    "meaning": "가정, 가설",
     "day": 3,
     "level": "N3",
     "page": 11
@@ -1443,7 +1443,7 @@
     "id": 161,
     "kanji": "家電製品",
     "hiragana": "かでんせいひん",
-    "meaning": "가전제품, 가전제품",
+    "meaning": "가전제품",
     "day": 3,
     "level": "N3",
     "page": 11
@@ -1452,7 +1452,7 @@
     "id": 162,
     "kanji": "悲しみ",
     "hiragana": "かなしみ",
-    "meaning": "슬픔, 슬픔, 슬픔",
+    "meaning": "슬픔",
     "day": 3,
     "level": "N3",
     "page": 11
@@ -1461,7 +1461,7 @@
     "id": 163,
     "kanji": "我慢",
     "hiragana": "がまん",
-    "meaning": "인내, 인내, 끈기",
+    "meaning": "인내, 끈기",
     "day": 3,
     "level": "N3",
     "page": 11
@@ -1488,7 +1488,7 @@
     "id": 166,
     "kanji": "空っぽ",
     "hiragana": "からっぽ",
-    "meaning": "비어 있는, 비어 있는, 비어 있는",
+    "meaning": "비어 있는",
     "day": 3,
     "level": "N3",
     "page": 11
@@ -1497,7 +1497,7 @@
     "id": 167,
     "kanji": "考え",
     "hiragana": "かんがえ",
-    "meaning": "생각, 생각, 보기",
+    "meaning": "생각, 보기",
     "day": 3,
     "level": "N3",
     "page": 11
@@ -1515,7 +1515,7 @@
     "id": 169,
     "kanji": "環境",
     "hiragana": "かんきょう",
-    "meaning": "환경, 환경, 상황",
+    "meaning": "환경, 상황",
     "day": 3,
     "level": "N3",
     "page": 11
@@ -1524,7 +1524,7 @@
     "id": 170,
     "kanji": "関係",
     "hiragana": "かんけい",
-    "meaning": "관계, 관계, 연결",
+    "meaning": "관계, 연결",
     "day": 3,
     "level": "N3",
     "page": 11
@@ -1542,7 +1542,7 @@
     "id": 172,
     "kanji": "観光",
     "hiragana": "かんこう",
-    "meaning": "관광, 관광",
+    "meaning": "관광",
     "day": 3,
     "level": "N3",
     "page": 11
@@ -1560,7 +1560,7 @@
     "id": 174,
     "kanji": "観察",
     "hiragana": "かんさつ",
-    "meaning": "관찰, 조사, 관찰",
+    "meaning": "관찰, 조사",
     "day": 3,
     "level": "N3",
     "page": 12
@@ -1596,7 +1596,7 @@
     "id": 178,
     "kanji": "感情",
     "hiragana": "かんじょう",
-    "meaning": "감정, 느낌, 느낌",
+    "meaning": "감정, 느낌",
     "day": 3,
     "level": "N3",
     "page": 12
@@ -1605,7 +1605,7 @@
     "id": 179,
     "kanji": "感心",
     "hiragana": "かんしん",
-    "meaning": "감탄하다, 감동하다, 감탄하다",
+    "meaning": "감탄하다, 감동하다",
     "day": 3,
     "level": "N3",
     "page": 12
@@ -1614,7 +1614,7 @@
     "id": 180,
     "kanji": "心",
     "hiragana": "こころ",
-    "meaning": "마음, 마음, 정신",
+    "meaning": "마음, 정신",
     "day": 3,
     "level": "N3",
     "page": 12
@@ -1641,7 +1641,7 @@
     "id": 183,
     "kanji": "間接",
     "hiragana": "かんせつ",
-    "meaning": "간접적인 것, 간접적인 것",
+    "meaning": "간접적인 것",
     "day": 3,
     "level": "N3",
     "page": 12
@@ -1659,7 +1659,7 @@
     "id": 185,
     "kanji": "乾燥",
     "hiragana": "かんそう",
-    "meaning": "건조함, 건조함, 건조함(예: 옷",
+    "meaning": "건조함, 건조함(예: 옷",
     "day": 3,
     "level": "N3",
     "page": 12
@@ -1722,7 +1722,7 @@
     "id": 192,
     "kanji": "期限",
     "hiragana": "きげん",
-    "meaning": "기간, 기간, 기간",
+    "meaning": "기간",
     "day": 3,
     "level": "N3",
     "page": 12
@@ -1749,7 +1749,7 @@
     "id": 195,
     "kanji": "期待",
     "hiragana": "きたい",
-    "meaning": "기대, 기대, 희망",
+    "meaning": "기대, 희망",
     "day": 3,
     "level": "N3",
     "page": 12
@@ -1758,7 +1758,7 @@
     "id": 196,
     "kanji": "気体",
     "hiragana": "きたい",
-    "meaning": "가스, 증기, 증기",
+    "meaning": "가스, 증기",
     "day": 4,
     "level": "N3",
     "page": 13
@@ -1767,7 +1767,7 @@
     "id": 197,
     "kanji": "帰宅",
     "hiragana": "きたく",
-    "meaning": "집에 돌아가다, 집에 가다, 집에 가다",
+    "meaning": "집에 돌아가다, 집에 가다",
     "day": 4,
     "level": "N3",
     "page": 13
@@ -1803,7 +1803,7 @@
     "id": 201,
     "kanji": "記念",
     "hiragana": "きねん",
-    "meaning": "기념, 기념, 기념",
+    "meaning": "기념",
     "day": 4,
     "level": "N3",
     "page": 13
@@ -1821,7 +1821,7 @@
     "id": 203,
     "kanji": "基本",
     "hiragana": "きほん",
-    "meaning": "기본, 기초, 기본",
+    "meaning": "기본, 기초",
     "day": 4,
     "level": "N3",
     "page": 14
@@ -1866,7 +1866,7 @@
     "id": 208,
     "kanji": "休憩",
     "hiragana": "きゅうけい",
-    "meaning": "쉬다, 쉬다, 쉬다",
+    "meaning": "쉬다",
     "day": 4,
     "level": "N3",
     "page": 14
@@ -1920,7 +1920,7 @@
     "id": 214,
     "kanji": "給料",
     "hiragana": "きゅうりょう",
-    "meaning": "급여, 임금, 급여",
+    "meaning": "급여, 임금",
     "day": 4,
     "level": "N3",
     "page": 14
@@ -1929,7 +1929,7 @@
     "id": 215,
     "kanji": "強化",
     "hiragana": "きょうか",
-    "meaning": "강화하다, 강화하다, 강화하다",
+    "meaning": "강화하다",
     "day": 4,
     "level": "N3",
     "page": 14
@@ -1938,7 +1938,7 @@
     "id": 216,
     "kanji": "教科書",
     "hiragana": "きょうかしょ",
-    "meaning": "교과서, 교과서, 교과서",
+    "meaning": "교과서",
     "day": 4,
     "level": "N3",
     "page": 14
@@ -1974,7 +1974,7 @@
     "id": 220,
     "kanji": "競争",
     "hiragana": "きょうそう",
-    "meaning": "경쟁, 시합, 경쟁",
+    "meaning": "경쟁, 시합",
     "day": 4,
     "level": "N3",
     "page": 14
@@ -1983,7 +1983,7 @@
     "id": 221,
     "kanji": "強調",
     "hiragana": "きょうちょう",
-    "meaning": "강조하다, 강조하다, 강조하다",
+    "meaning": "강조하다",
     "day": 4,
     "level": "N3",
     "page": 14
@@ -2001,7 +2001,7 @@
     "id": 223,
     "kanji": "共通点",
     "hiragana": "きょうつうてん",
-    "meaning": "공통점, 공통점",
+    "meaning": "공통점",
     "day": 4,
     "level": "N3",
     "page": 15
@@ -2019,7 +2019,7 @@
     "id": 225,
     "kanji": "協力",
     "hiragana": "きょうりょく",
-    "meaning": "협력, 협력, 도움",
+    "meaning": "협력, 도움",
     "day": 4,
     "level": "N3",
     "page": 15
@@ -2028,7 +2028,7 @@
     "id": 226,
     "kanji": "許可",
     "hiragana": "きょか",
-    "meaning": "허가, 승인, 허가",
+    "meaning": "허가, 승인",
     "day": 4,
     "level": "N3",
     "page": 15
@@ -2055,7 +2055,7 @@
     "id": 229,
     "kanji": "禁煙",
     "hiragana": "きんえん",
-    "meaning": "담배를 끊다, 담배를 끊다, 흡연을 금지하다",
+    "meaning": "담배를 끊다, 흡연을 금지하다",
     "day": 4,
     "level": "N3",
     "page": 15
@@ -2064,7 +2064,7 @@
     "id": 230,
     "kanji": "禁煙席",
     "hiragana": "きんえんせき",
-    "meaning": "금연석, 금연석",
+    "meaning": "금연석",
     "day": 4,
     "level": "N3",
     "page": 15
@@ -2073,7 +2073,7 @@
     "id": 231,
     "kanji": "近視",
     "hiragana": "きんし",
-    "meaning": "근시, 근시, 근시",
+    "meaning": "근시",
     "day": 4,
     "level": "N3",
     "page": 15
@@ -2091,7 +2091,7 @@
     "id": 233,
     "kanji": "緊張",
     "hiragana": "きんちょう",
-    "meaning": "긴장, 긴장, 긴장",
+    "meaning": "긴장",
     "day": 4,
     "level": "N3",
     "page": 15
@@ -2109,7 +2109,7 @@
     "id": 235,
     "kanji": "区域",
     "hiragana": "くいき",
-    "meaning": "지역, 구역, 구역",
+    "meaning": "지역, 구역",
     "day": 4,
     "level": "N3",
     "page": 15
@@ -2127,7 +2127,7 @@
     "id": 237,
     "kanji": "偶然",
     "hiragana": "ぐうぜん",
-    "meaning": "우연, 우연, 사고",
+    "meaning": "우연, 사고",
     "day": 4,
     "level": "N3",
     "page": 15
@@ -2145,7 +2145,7 @@
     "id": 239,
     "kanji": "くしゃみ",
     "hiragana": "くしゃみ",
-    "meaning": "재채기, 재채기, 조기 사망에 대한 부적으로 재채기하는 사람에 대한 응답으로 두 번 말함",
+    "meaning": "재채기, 조기 사망에 대한 부적으로 재채기하는 사람에 대한 응답으로 두 번 말함",
     "day": 4,
     "level": "N3",
     "page": 15
@@ -2154,7 +2154,7 @@
     "id": 240,
     "kanji": "薬指",
     "hiragana": "くすりゆび",
-    "meaning": "약지, 약지, 넷째 손가락(특히 피아노 연주 시)",
+    "meaning": "약지, 넷째 손가락(특히 피아노 연주 시)",
     "day": 4,
     "level": "N3",
     "page": 15
@@ -2208,7 +2208,7 @@
     "id": 246,
     "kanji": "繰り返し",
     "hiragana": "くりかえし",
-    "meaning": "반복, 반복, 반복",
+    "meaning": "반복",
     "day": 4,
     "level": "N3",
     "page": 16
@@ -2226,7 +2226,7 @@
     "id": 248,
     "kanji": "訓練",
     "hiragana": "くんれん",
-    "meaning": "훈련, 훈련, 연습",
+    "meaning": "훈련, 연습",
     "day": 4,
     "level": "N3",
     "page": 16
@@ -2253,7 +2253,7 @@
     "id": 251,
     "kanji": "警察官",
     "hiragana": "けいさつかん",
-    "meaning": "경찰관, 경찰관, 여경",
+    "meaning": "경찰관, 여경",
     "day": 4,
     "level": "N3",
     "page": 16
@@ -2271,7 +2271,7 @@
     "id": 253,
     "kanji": "計算",
     "hiragana": "けいさん",
-    "meaning": "계산, 계산, 계산",
+    "meaning": "계산",
     "day": 4,
     "level": "N3",
     "page": 16
@@ -2334,7 +2334,7 @@
     "id": 260,
     "kanji": "毛糸",
     "hiragana": "けいと",
-    "meaning": "뜨개질을 하는 양모, 모사, 모사",
+    "meaning": "뜨개질을 하는 양모, 모사",
     "day": 4,
     "level": "N3",
     "page": 16
@@ -2343,7 +2343,7 @@
     "id": 261,
     "kanji": "経由",
     "hiragana": "けいゆ",
-    "meaning": "통과하다, 경유하다, 경유하다",
+    "meaning": "통과하다, 경유하다",
     "day": 4,
     "level": "N3",
     "page": 16
@@ -2361,7 +2361,7 @@
     "id": 263,
     "kanji": "量",
     "hiragana": "りょう",
-    "meaning": "양, 양, 양",
+    "meaning": "양",
     "day": 4,
     "level": "N3",
     "page": 16
@@ -2379,7 +2379,7 @@
     "id": 265,
     "kanji": "化粧",
     "hiragana": "けしょう",
-    "meaning": "메이크업, 메이크업, 화장품",
+    "meaning": "메이크업, 화장품",
     "day": 4,
     "level": "N3",
     "page": 16
@@ -2406,7 +2406,7 @@
     "id": 268,
     "kanji": "決意",
     "hiragana": "けつい",
-    "meaning": "결단, 결심, 결심",
+    "meaning": "결단, 결심",
     "day": 5,
     "level": "N3",
     "page": 17
@@ -2424,7 +2424,7 @@
     "id": 270,
     "kanji": "結婚式",
     "hiragana": "けっこんしき",
-    "meaning": "결혼식, 결혼식, 결혼식",
+    "meaning": "결혼식",
     "day": 5,
     "level": "N3",
     "page": 17
@@ -2442,7 +2442,7 @@
     "id": 272,
     "kanji": "決心",
     "hiragana": "けっしん",
-    "meaning": "결심, 결심",
+    "meaning": "결심",
     "day": 5,
     "level": "N3",
     "page": 17
@@ -2460,7 +2460,7 @@
     "id": 274,
     "kanji": "欠点",
     "hiragana": "けってん",
-    "meaning": "결점, 결점, 결점",
+    "meaning": "결점",
     "day": 5,
     "level": "N3",
     "page": 18
@@ -2532,7 +2532,7 @@
     "id": 282,
     "kanji": "健康",
     "hiragana": "けんこう",
-    "meaning": "건강, 건강, 소리",
+    "meaning": "건강, 소리",
     "day": 5,
     "level": "N3",
     "page": 18
@@ -2550,7 +2550,7 @@
     "id": 284,
     "kanji": "現在",
     "hiragana": "げんざい",
-    "meaning": "현재, 현재, 지금",
+    "meaning": "현재, 지금",
     "day": 5,
     "level": "N3",
     "page": 18
@@ -2568,7 +2568,7 @@
     "id": 286,
     "kanji": "減少",
     "hiragana": "げんしょう",
-    "meaning": "감소, 감소, 쇠퇴",
+    "meaning": "감소, 쇠퇴",
     "day": 5,
     "level": "N3",
     "page": 18
@@ -2577,7 +2577,7 @@
     "id": 287,
     "kanji": "建設",
     "hiragana": "けんせつ",
-    "meaning": "건설,설립",
+    "meaning": "건설, 설립",
     "day": 5,
     "level": "N3",
     "page": 18
@@ -2586,7 +2586,7 @@
     "id": 288,
     "kanji": "現代",
     "hiragana": "げんだい",
-    "meaning": "현재, 현재, 오늘",
+    "meaning": "현재, 오늘",
     "day": 5,
     "level": "N3",
     "page": 18
@@ -2622,7 +2622,7 @@
     "id": 292,
     "kanji": "恋人",
     "hiragana": "こいびと",
-    "meaning": "애인, 애인, 남자친구",
+    "meaning": "애인, 남자친구",
     "day": 5,
     "level": "N3",
     "page": 18
@@ -2631,7 +2631,7 @@
     "id": 293,
     "kanji": "幸運",
     "hiragana": "こううん",
-    "meaning": "행운, 행운",
+    "meaning": "행운",
     "day": 5,
     "level": "N3",
     "page": 18
@@ -2640,7 +2640,7 @@
     "id": 294,
     "kanji": "効果",
     "hiragana": "こうか",
-    "meaning": "효과, 효과, 효험",
+    "meaning": "효과, 효험",
     "day": 5,
     "level": "N3",
     "page": 19
@@ -2676,7 +2676,7 @@
     "id": 298,
     "kanji": "交換",
     "hiragana": "こうかん",
-    "meaning": "교환하다, 교환하다, 교환하다",
+    "meaning": "교환하다",
     "day": 5,
     "level": "N3",
     "page": 19
@@ -2694,7 +2694,7 @@
     "id": 300,
     "kanji": "高級",
     "hiragana": "こうきゅう",
-    "meaning": "고급, 고급, 고품질",
+    "meaning": "고급, 고품질",
     "day": 5,
     "level": "N3",
     "page": 19
@@ -2748,7 +2748,7 @@
     "id": 306,
     "kanji": "中",
     "hiragana": "なか",
-    "meaning": "내부, 내부, 사이",
+    "meaning": "내부, 사이",
     "day": 5,
     "level": "N3",
     "page": 19
@@ -2757,7 +2757,7 @@
     "id": 307,
     "kanji": "交際",
     "hiragana": "こうさい",
-    "meaning": "회사,우정,협회",
+    "meaning": "회사, 우정, 협회",
     "day": 5,
     "level": "N3",
     "page": 19
@@ -2766,7 +2766,7 @@
     "id": 308,
     "kanji": "高速道路",
     "hiragana": "こうそくどうろ",
-    "meaning": "고속도로, 고속도로, 고속도로",
+    "meaning": "고속도로",
     "day": 5,
     "level": "N3",
     "page": 19
@@ -2784,7 +2784,7 @@
     "id": 310,
     "kanji": "交通費",
     "hiragana": "こうつうひ",
-    "meaning": "여비, 여비, 차비",
+    "meaning": "여비, 차비",
     "day": 5,
     "level": "N3",
     "page": 19
@@ -2793,7 +2793,7 @@
     "id": 311,
     "kanji": "校庭",
     "hiragana": "こうてい",
-    "meaning": "학교 운동장, 학교 운동장, 학교 운동장",
+    "meaning": "학교 운동장",
     "day": 5,
     "level": "N3",
     "page": 19
@@ -2802,7 +2802,7 @@
     "id": 312,
     "kanji": "行動",
     "hiragana": "こうどう",
-    "meaning": "행동, 행실, 행동",
+    "meaning": "행동, 행실",
     "day": 5,
     "level": "N3",
     "page": 19
@@ -2829,7 +2829,7 @@
     "id": 315,
     "kanji": "後半",
     "hiragana": "こうはん",
-    "meaning": "후반, 후반",
+    "meaning": "후반",
     "day": 5,
     "level": "N3",
     "page": 19
@@ -2892,7 +2892,7 @@
     "id": 322,
     "kanji": "高齢者",
     "hiragana": "こうれいしゃ",
-    "meaning": "노인, 노인, 노인",
+    "meaning": "노인",
     "day": 5,
     "level": "N3",
     "page": 20
@@ -2910,7 +2910,7 @@
     "id": 324,
     "kanji": "小型",
     "hiragana": "こがた",
-    "meaning": "소형, 소규모, 소형",
+    "meaning": "소형, 소규모",
     "day": 5,
     "level": "N3",
     "page": 20
@@ -2919,7 +2919,7 @@
     "id": 325,
     "kanji": "呼吸",
     "hiragana": "こきゅう",
-    "meaning": "호흡, 호흡, 요령",
+    "meaning": "호흡, 요령",
     "day": 5,
     "level": "N3",
     "page": 20
@@ -2928,7 +2928,7 @@
     "id": 326,
     "kanji": "故郷",
     "hiragana": "ふるさと",
-    "meaning": "고향, 출생지, 출생지",
+    "meaning": "고향, 출생지",
     "day": 5,
     "level": "N3",
     "page": 20
@@ -2964,7 +2964,7 @@
     "id": 330,
     "kanji": "個人",
     "hiragana": "こじん",
-    "meaning": "개인, 사적인 사람, 개인",
+    "meaning": "개인, 사적인 사람",
     "day": 5,
     "level": "N3",
     "page": 20
@@ -2973,7 +2973,7 @@
     "id": 331,
     "kanji": "子育て",
     "hiragana": "こそだて",
-    "meaning": "육아, 육아, 육아",
+    "meaning": "육아",
     "day": 5,
     "level": "N3",
     "page": 20
@@ -3000,7 +3000,7 @@
     "id": 334,
     "kanji": "このごろ",
     "hiragana": "このごろ",
-    "meaning": "요즘, 요즘, 지금",
+    "meaning": "요즘, 지금",
     "day": 5,
     "level": "N3",
     "page": 20
@@ -3018,7 +3018,7 @@
     "id": 336,
     "kanji": "小指",
     "hiragana": "こゆび",
-    "meaning": "새끼손가락, 새끼손가락, 네 번째(occ. 다섯 번째) 손가락",
+    "meaning": "새끼손가락, 네 번째(occ. 다섯 번째) 손가락",
     "day": 5,
     "level": "N3",
     "page": 20
@@ -3036,7 +3036,7 @@
     "id": 338,
     "kanji": "混雑",
     "hiragana": "こんざつ",
-    "meaning": "혼잡, 혼잡, 혼잡",
+    "meaning": "혼잡",
     "day": 6,
     "level": "N3",
     "page": 21
@@ -3045,7 +3045,7 @@
     "id": 339,
     "kanji": "内",
     "hiragana": "うち",
-    "meaning": "내부, 내부, 동안(예: 사람은 젊습니다.",
+    "meaning": "내부, 동안(예: 사람은 젊습니다.",
     "day": 6,
     "level": "N3",
     "page": 21
@@ -3063,7 +3063,7 @@
     "id": 341,
     "kanji": "最初",
     "hiragana": "さいしょ",
-    "meaning": "처음, 처음, 처음",
+    "meaning": "처음",
     "day": 6,
     "level": "N3",
     "page": 21
@@ -3072,7 +3072,7 @@
     "id": 342,
     "kanji": "最新",
     "hiragana": "さいしん",
-    "meaning": "최신, 최신, 최신(뉴스",
+    "meaning": "최신, 최신(뉴스",
     "day": 6,
     "level": "N3",
     "page": 21
@@ -3081,7 +3081,7 @@
     "id": 343,
     "kanji": "再生",
     "hiragana": "さいせい",
-    "meaning": "소생, 소생, 소생, 소생",
+    "meaning": "소생",
     "day": 6,
     "level": "N3",
     "page": 21
@@ -3090,7 +3090,7 @@
     "id": 344,
     "kanji": "取",
     "hiragana": "とり",
-    "meaning": "가져가는 것, 가져가는 것, 모으는 것",
+    "meaning": "가져가는 것, 모으는 것",
     "day": 6,
     "level": "N3",
     "page": 22
@@ -3108,7 +3108,7 @@
     "id": 346,
     "kanji": "採点",
     "hiragana": "さいてん",
-    "meaning": "마킹, 채점, 채점",
+    "meaning": "마킹, 채점",
     "day": 6,
     "level": "N3",
     "page": 22
@@ -3153,7 +3153,7 @@
     "id": 351,
     "kanji": "一昨々日",
     "hiragana": "いっさくさくじつ",
-    "meaning": "어제 이틀 전, 삼일 전(전)",
+    "meaning": "어제 이틀 전, 삼일 전",
     "day": 6,
     "level": "N3",
     "page": 22
@@ -3162,7 +3162,7 @@
     "id": 352,
     "kanji": "作業",
     "hiragana": "さぎょう",
-    "meaning": "일, 작업, 작업",
+    "meaning": "일, 작업",
     "day": 6,
     "level": "N3",
     "page": 22
@@ -3216,7 +3216,7 @@
     "id": 358,
     "kanji": "左折",
     "hiragana": "させつ",
-    "meaning": "좌회전, 좌회전",
+    "meaning": "좌회전",
     "day": 6,
     "level": "N3",
     "page": 22
@@ -3225,7 +3225,7 @@
     "id": 359,
     "kanji": "作家",
     "hiragana": "さっか",
-    "meaning": "작가, 작가, 소설가",
+    "meaning": "작가, 소설가",
     "day": 6,
     "level": "N3",
     "page": 22
@@ -3252,7 +3252,7 @@
     "id": 362,
     "kanji": "殺人",
     "hiragana": "さつじん",
-    "meaning": "살인, 살인, 살인",
+    "meaning": "살인",
     "day": 6,
     "level": "N3",
     "page": 22
@@ -3261,7 +3261,7 @@
     "id": 363,
     "kanji": "騒ぎ",
     "hiragana": "さわぎ",
-    "meaning": "소란, 소란",
+    "meaning": "소란",
     "day": 6,
     "level": "N3",
     "page": 22
@@ -3315,7 +3315,7 @@
     "id": 369,
     "kanji": "上",
     "hiragana": "うえ",
-    "meaning": "위에, 위에, 위로",
+    "meaning": "위에, 위로",
     "day": 6,
     "level": "N3",
     "page": 23
@@ -3369,7 +3369,7 @@
     "id": 375,
     "kanji": "事件",
     "hiragana": "じけん",
-    "meaning": "사건, 사건, 사건",
+    "meaning": "사건",
     "day": 6,
     "level": "N3",
     "page": 23
@@ -3414,7 +3414,7 @@
     "id": 380,
     "kanji": "指示",
     "hiragana": "しじ",
-    "meaning": "표시, 표시, 지정",
+    "meaning": "표시, 지정",
     "day": 6,
     "level": "N3",
     "page": 23
@@ -3450,7 +3450,7 @@
     "id": 384,
     "kanji": "事情",
     "hiragana": "じじょう",
-    "meaning": "상황, 조건, 상황",
+    "meaning": "상황, 조건",
     "day": 6,
     "level": "N3",
     "page": 23
@@ -3486,7 +3486,7 @@
     "id": 388,
     "kanji": "姿勢",
     "hiragana": "しせい",
-    "meaning": "자세, 자세, 자세",
+    "meaning": "자세",
     "day": 7,
     "level": "N3",
     "page": 24
@@ -3504,7 +3504,7 @@
     "id": 390,
     "kanji": "事前",
     "hiragana": "じぜん",
-    "meaning": "미리, 미리, 미리",
+    "meaning": "미리",
     "day": 7,
     "level": "N3",
     "page": 24
@@ -3522,7 +3522,7 @@
     "id": 392,
     "kanji": "下書き",
     "hiragana": "したがき",
-    "meaning": "초안, 초안",
+    "meaning": "초안",
     "day": 7,
     "level": "N3",
     "page": 24
@@ -3531,7 +3531,7 @@
     "id": 393,
     "kanji": "失業",
     "hiragana": "しつぎょう",
-    "meaning": "실직, 실직, 실직",
+    "meaning": "실직",
     "day": 7,
     "level": "N3",
     "page": 24
@@ -3540,7 +3540,7 @@
     "id": 394,
     "kanji": "湿",
     "hiragana": "しつ",
-    "meaning": "습기, 습기, 습기",
+    "meaning": "습기",
     "day": 7,
     "level": "N3",
     "page": 24
@@ -3549,7 +3549,7 @@
     "id": 395,
     "kanji": "千",
     "hiragana": "せん",
-    "meaning": "천, 1,000",
+    "meaning": "천, 1, 000",
     "day": 7,
     "level": "N3",
     "page": 24
@@ -3567,7 +3567,7 @@
     "id": 397,
     "kanji": "実現",
     "hiragana": "じつげん",
-    "meaning": "구현(예: 시스템, 구체화, 구체화",
+    "meaning": "구현(예: 시스템, 구체화",
     "day": 7,
     "level": "N3",
     "page": 24
@@ -3639,7 +3639,7 @@
     "id": 405,
     "kanji": "支店",
     "hiragana": "してん",
-    "meaning": "지점, 지점",
+    "meaning": "지점",
     "day": 7,
     "level": "N3",
     "page": 24
@@ -3702,7 +3702,7 @@
     "id": 412,
     "kanji": "自慢",
     "hiragana": "じまん",
-    "meaning": "자랑하다, 자랑하다",
+    "meaning": "자랑하다",
     "day": 7,
     "level": "N3",
     "page": 25
@@ -3711,7 +3711,7 @@
     "id": 413,
     "kanji": "しみ",
     "hiragana": "しみ",
-    "meaning": "얼룩, 얼룩, 얼룩",
+    "meaning": "얼룩",
     "day": 7,
     "level": "N3",
     "page": 25
@@ -3720,7 +3720,7 @@
     "id": 414,
     "kanji": "事務",
     "hiragana": "じむ",
-    "meaning": "사무, 사무, 행정",
+    "meaning": "사무, 행정",
     "day": 7,
     "level": "N3",
     "page": 25
@@ -3738,7 +3738,7 @@
     "id": 416,
     "kanji": "締め切り",
     "hiragana": "しめきり",
-    "meaning": "마감, 마감, 마감",
+    "meaning": "마감",
     "day": 7,
     "level": "N3",
     "page": 26
@@ -3792,7 +3792,7 @@
     "id": 422,
     "kanji": "自由",
     "hiragana": "じゆう",
-    "meaning": "자유, 자유",
+    "meaning": "자유",
     "day": 7,
     "level": "N3",
     "page": 26
@@ -3846,7 +3846,7 @@
     "id": 428,
     "kanji": "就職",
     "hiragana": "しゅうしょく",
-    "meaning": "취업, 취업",
+    "meaning": "취업",
     "day": 7,
     "level": "N3",
     "page": 26
@@ -3855,7 +3855,7 @@
     "id": 429,
     "kanji": "自由席",
     "hiragana": "じゆうせき",
-    "meaning": "자유석, 자유석",
+    "meaning": "자유석",
     "day": 7,
     "level": "N3",
     "page": 26
@@ -3927,7 +3927,7 @@
     "id": 437,
     "kanji": "授業料",
     "hiragana": "じゅぎょうりょう",
-    "meaning": "수업료, 수업료",
+    "meaning": "수업료",
     "day": 7,
     "level": "N3",
     "page": 27
@@ -3945,7 +3945,7 @@
     "id": 439,
     "kanji": "縮小",
     "hiragana": "しゅくしょう",
-    "meaning": "축소, 축소, 삭감",
+    "meaning": "축소, 삭감",
     "day": 7,
     "level": "N3",
     "page": 27
@@ -3954,7 +3954,7 @@
     "id": 440,
     "kanji": "宿泊",
     "hiragana": "しゅくはく",
-    "meaning": "숙박, 숙박",
+    "meaning": "숙박",
     "day": 7,
     "level": "N3",
     "page": 27
@@ -3981,7 +3981,7 @@
     "id": 443,
     "kanji": "手術",
     "hiragana": "しゅじゅつ",
-    "meaning": "수술, 수술, 시술",
+    "meaning": "수술, 시술",
     "day": 7,
     "level": "N3",
     "page": 27
@@ -4008,7 +4008,7 @@
     "id": 446,
     "kanji": "主張",
     "hiragana": "しゅちょう",
-    "meaning": "주장, 주장, 주장",
+    "meaning": "주장",
     "day": 7,
     "level": "N3",
     "page": 27
@@ -4017,7 +4017,7 @@
     "id": 447,
     "kanji": "出勤",
     "hiragana": "しゅっきん",
-    "meaning": "출근, 출근, 출석(직장에서",
+    "meaning": "출근, 출석(직장에서",
     "day": 7,
     "level": "N3",
     "page": 27
@@ -4026,7 +4026,7 @@
     "id": 448,
     "kanji": "出血",
     "hiragana": "しゅっけつ",
-    "meaning": "출혈, 출혈, 출혈",
+    "meaning": "출혈",
     "day": 7,
     "level": "N3",
     "page": 27
@@ -4035,7 +4035,7 @@
     "id": 449,
     "kanji": "出現",
     "hiragana": "しゅつげん",
-    "meaning": "출현, 출현, 도래",
+    "meaning": "출현, 도래",
     "day": 7,
     "level": "N3",
     "page": 27
@@ -4089,7 +4089,7 @@
     "id": 455,
     "kanji": "取得",
     "hiragana": "とりえ",
-    "meaning": "가치, 장점, 가치",
+    "meaning": "가치, 장점",
     "day": 7,
     "level": "N3",
     "page": 27
@@ -4107,7 +4107,7 @@
     "id": 457,
     "kanji": "寿命",
     "hiragana": "じゅみょう",
-    "meaning": "수명, 일생, 일생",
+    "meaning": "수명, 일생",
     "day": 7,
     "level": "N3",
     "page": 27
@@ -4116,7 +4116,7 @@
     "id": 458,
     "kanji": "種類",
     "hiragana": "しゅるい",
-    "meaning": "다양성, 종류, 종류",
+    "meaning": "다양성, 종류",
     "day": 8,
     "level": "N3",
     "page": 28
@@ -4179,7 +4179,7 @@
     "id": 465,
     "kanji": "上下",
     "hiragana": "うえした",
-    "meaning": "위와 아래, 위와 아래, 높고 낮은",
+    "meaning": "위와 아래, 높고 낮은",
     "day": 8,
     "level": "N3",
     "page": 28
@@ -4197,7 +4197,7 @@
     "id": 467,
     "kanji": "正午",
     "hiragana": "しょうご",
-    "meaning": "정오, 정오",
+    "meaning": "정오",
     "day": 8,
     "level": "N3",
     "page": 28
@@ -4215,7 +4215,7 @@
     "id": 469,
     "kanji": "常識",
     "hiragana": "じょうしき",
-    "meaning": "상식, 상식, 상식",
+    "meaning": "상식",
     "day": 8,
     "level": "N3",
     "page": 28
@@ -4278,7 +4278,7 @@
     "id": 476,
     "kanji": "商店",
     "hiragana": "しょうてん",
-    "meaning": "상점, 상점, 회사",
+    "meaning": "상점, 회사",
     "day": 8,
     "level": "N3",
     "page": 28
@@ -4287,7 +4287,7 @@
     "id": 477,
     "kanji": "商人",
     "hiragana": "しょうにん",
-    "meaning": "상인, 상인, 상인",
+    "meaning": "상인",
     "day": 8,
     "level": "N3",
     "page": 28
@@ -4323,7 +4323,7 @@
     "id": 481,
     "kanji": "消費",
     "hiragana": "しょうひ",
-    "meaning": "소비, 지출, 지출",
+    "meaning": "소비, 지출",
     "day": 8,
     "level": "N3",
     "page": 29
@@ -4332,7 +4332,7 @@
     "id": 482,
     "kanji": "商品",
     "hiragana": "しょうひん",
-    "meaning": "상품, 상품, 물건",
+    "meaning": "상품, 물건",
     "day": 8,
     "level": "N3",
     "page": 29
@@ -4377,7 +4377,7 @@
     "id": 487,
     "kanji": "正面",
     "hiragana": "しょうめん",
-    "meaning": "정면, 정면, 정면",
+    "meaning": "정면",
     "day": 8,
     "level": "N3",
     "page": 30
@@ -4395,7 +4395,7 @@
     "id": 489,
     "kanji": "初級",
     "hiragana": "しょきゅう",
-    "meaning": "초급레벨, 초급레벨",
+    "meaning": "초급레벨",
     "day": 8,
     "level": "N3",
     "page": 30
@@ -4404,7 +4404,7 @@
     "id": 490,
     "kanji": "職業",
     "hiragana": "しょくぎょう",
-    "meaning": "직업, 직업, 직업",
+    "meaning": "직업",
     "day": 8,
     "level": "N3",
     "page": 30
@@ -4431,7 +4431,7 @@
     "id": 493,
     "kanji": "職場",
     "hiragana": "しょくば",
-    "meaning": "직위, 직장, 직장",
+    "meaning": "직위, 직장",
     "day": 8,
     "level": "N3",
     "page": 30
@@ -4440,7 +4440,7 @@
     "id": 494,
     "kanji": "食費",
     "hiragana": "しょくひ",
-    "meaning": "식비, 식비, 식비",
+    "meaning": "식비",
     "day": 8,
     "level": "N3",
     "page": 30
@@ -4449,7 +4449,7 @@
     "id": 495,
     "kanji": "食品",
     "hiragana": "しょくひん",
-    "meaning": "식품, 식품, 식료품",
+    "meaning": "식품, 식료품",
     "day": 8,
     "level": "N3",
     "page": 30
@@ -4503,7 +4503,7 @@
     "id": 501,
     "kanji": "書店",
     "hiragana": "しょてん",
-    "meaning": "서점, 서점",
+    "meaning": "서점",
     "day": 8,
     "level": "N3",
     "page": 30
@@ -4521,7 +4521,7 @@
     "id": 503,
     "kanji": "書類",
     "hiragana": "しょるい",
-    "meaning": "서류, 서류",
+    "meaning": "서류",
     "day": 8,
     "level": "N3",
     "page": 30
@@ -4557,7 +4557,7 @@
     "id": 507,
     "kanji": "資料",
     "hiragana": "しりょう",
-    "meaning": "재료, 재료, 데이터",
+    "meaning": "재료, 데이터",
     "day": 8,
     "level": "N3",
     "page": 30
@@ -4575,7 +4575,7 @@
     "id": 509,
     "kanji": "新幹線",
     "hiragana": "しんかんせん",
-    "meaning": "신칸센, 신칸센",
+    "meaning": "신칸센",
     "day": 8,
     "level": "N3",
     "page": 31
@@ -4674,7 +4674,7 @@
     "id": 520,
     "kanji": "親友",
     "hiragana": "しんゆう",
-    "meaning": "친한 친구, 친한 친구, 친구",
+    "meaning": "친한 친구, 친구",
     "day": 8,
     "level": "N3",
     "page": 31
@@ -4710,7 +4710,7 @@
     "id": 524,
     "kanji": "水道料金",
     "hiragana": "すいどうりょうきん",
-    "meaning": "수도요금, 수도요금",
+    "meaning": "수도요금",
     "day": 8,
     "level": "N3",
     "page": 31
@@ -4764,7 +4764,7 @@
     "id": 530,
     "kanji": "住まい",
     "hiragana": "すまい",
-    "meaning": "거주지, 집, 거주지",
+    "meaning": "거주지, 집",
     "day": 9,
     "level": "N3",
     "page": 32
@@ -4782,7 +4782,7 @@
     "id": 532,
     "kanji": "正解",
     "hiragana": "せいかい",
-    "meaning": "정답, 정답, 정확한 해석",
+    "meaning": "정답, 정확한 해석",
     "day": 9,
     "level": "N3",
     "page": 32
@@ -4845,7 +4845,7 @@
     "id": 539,
     "kanji": "正座",
     "hiragana": "しょうざ",
-    "meaning": "명예의 자리, 명예의 자리",
+    "meaning": "명예의 자리",
     "day": 9,
     "level": "N3",
     "page": 32
@@ -4890,7 +4890,7 @@
     "id": 544,
     "kanji": "月",
     "hiragana": "つき",
-    "meaning": "달, 달, 달빛",
+    "meaning": "달, 달빛",
     "day": 9,
     "level": "N3",
     "page": 32
@@ -4908,7 +4908,7 @@
     "id": 546,
     "kanji": "成人",
     "hiragana": "せいじん",
-    "meaning": "어른이 되다, 어른이 되다, 어른이 되다",
+    "meaning": "어른이 되다",
     "day": 9,
     "level": "N3",
     "page": 32
@@ -4926,7 +4926,7 @@
     "id": 548,
     "kanji": "清掃",
     "hiragana": "せいそう",
-    "meaning": "청소, 청소, 쓰레기 수거",
+    "meaning": "청소, 쓰레기 수거",
     "day": 9,
     "level": "N3",
     "page": 32
@@ -4953,7 +4953,7 @@
     "id": 551,
     "kanji": "月",
     "hiragana": "つき",
-    "meaning": "달, 달, 달빛",
+    "meaning": "달, 달빛",
     "day": 9,
     "level": "N3",
     "page": 33
@@ -4962,7 +4962,7 @@
     "id": 552,
     "kanji": "生年月日",
     "hiragana": "せいねんがっぴ",
-    "meaning": "생년월일, 생년월일, DOB",
+    "meaning": "생년월일, DOB",
     "day": 9,
     "level": "N3",
     "page": 33
@@ -4989,7 +4989,7 @@
     "id": 555,
     "kanji": "正門",
     "hiragana": "せいもん",
-    "meaning": "정문, 정문",
+    "meaning": "정문",
     "day": 9,
     "level": "N3",
     "page": 33
@@ -5007,7 +5007,7 @@
     "id": 557,
     "kanji": "咳",
     "hiragana": "せき",
-    "meaning": "기침, 기침, tussis",
+    "meaning": "기침, tussis",
     "day": 9,
     "level": "N3",
     "page": 34
@@ -5025,7 +5025,7 @@
     "id": 559,
     "kanji": "石油",
     "hiragana": "せきゆ",
-    "meaning": "석유, 석유, 등유",
+    "meaning": "석유, 등유",
     "day": 9,
     "level": "N3",
     "page": 34
@@ -5043,7 +5043,7 @@
     "id": 561,
     "kanji": "節約",
     "hiragana": "せつやく",
-    "meaning": "절약하다, 절약하다",
+    "meaning": "절약하다",
     "day": 9,
     "level": "N3",
     "page": 34
@@ -5070,7 +5070,7 @@
     "id": 564,
     "kanji": "前後",
     "hiragana": "ぜんご",
-    "meaning": "앞과 뒤, 앞과 뒤, 앞과 뒤",
+    "meaning": "앞과 뒤",
     "day": 9,
     "level": "N3",
     "page": 34
@@ -5124,7 +5124,7 @@
     "id": 570,
     "kanji": "選択",
     "hiragana": "せんたく",
-    "meaning": "선택, 선택, 옵션",
+    "meaning": "선택, 옵션",
     "day": 9,
     "level": "N3",
     "page": 34
@@ -5169,7 +5169,7 @@
     "id": 575,
     "kanji": "専門家",
     "hiragana": "せんもんか",
-    "meaning": "전문가, 전문가, 전문가",
+    "meaning": "전문가",
     "day": 10,
     "level": "N3",
     "page": 35
@@ -5178,7 +5178,7 @@
     "id": 576,
     "kanji": "線路",
     "hiragana": "せんろ",
-    "meaning": "기찻길, 기찻길, 철도",
+    "meaning": "기찻길, 철도",
     "day": 10,
     "level": "N3",
     "page": 35
@@ -5196,7 +5196,7 @@
     "id": 578,
     "kanji": "自",
     "hiragana": "じ",
-    "meaning": "자기-, (시간이나 장소로부터)",
+    "meaning": "자기-",
     "day": 10,
     "level": "N3",
     "page": 35
@@ -5205,7 +5205,7 @@
     "id": 579,
     "kanji": "送金",
     "hiragana": "そうきん",
-    "meaning": "송금, 송금, 송금",
+    "meaning": "송금",
     "day": 10,
     "level": "N3",
     "page": 35
@@ -5322,7 +5322,7 @@
     "id": 592,
     "kanji": "速度",
     "hiragana": "そくど",
-    "meaning": "속도, 속도, 속도",
+    "meaning": "속도",
     "day": 10,
     "level": "N3",
     "page": 35
@@ -5367,7 +5367,7 @@
     "id": 597,
     "kanji": "体育",
     "hiragana": "たいいく",
-    "meaning": "체육, 체육, 체육 (수업",
+    "meaning": "체육, 체육 (수업",
     "day": 10,
     "level": "N3",
     "page": 36
@@ -5376,7 +5376,7 @@
     "id": 598,
     "kanji": "退院",
     "hiragana": "たいいん",
-    "meaning": "퇴원하다, 퇴원하다",
+    "meaning": "퇴원하다",
     "day": 10,
     "level": "N3",
     "page": 36
@@ -5403,7 +5403,7 @@
     "id": 601,
     "kanji": "上",
     "hiragana": "うえ",
-    "meaning": "위에, 위에, 위로",
+    "meaning": "위에, 위로",
     "day": 10,
     "level": "N3",
     "page": 36
@@ -5412,7 +5412,7 @@
     "id": 602,
     "kanji": "退学",
     "hiragana": "たいがく",
-    "meaning": "학교를 자퇴하다, 퇴학하다, 퇴학하다",
+    "meaning": "학교를 자퇴하다, 퇴학하다",
     "day": 10,
     "level": "N3",
     "page": 36
@@ -5439,7 +5439,7 @@
     "id": 605,
     "kanji": "在",
     "hiragana": "ざい",
-    "meaning": "시골, 시골, 교외",
+    "meaning": "시골, 교외",
     "day": 10,
     "level": "N3",
     "page": 36
@@ -5448,7 +5448,7 @@
     "id": 606,
     "kanji": "対策",
     "hiragana": "たいさく",
-    "meaning": "조치, 조치, 대책",
+    "meaning": "조치, 대책",
     "day": 10,
     "level": "N3",
     "page": 36
@@ -5493,7 +5493,7 @@
     "id": 611,
     "kanji": "代表",
     "hiragana": "だいひょう",
-    "meaning": "대표, 대표, 대표",
+    "meaning": "대표",
     "day": 10,
     "level": "N3",
     "page": 36
@@ -5520,7 +5520,7 @@
     "id": 614,
     "kanji": "代理",
     "hiragana": "だいり",
-    "meaning": "대리, 대리, 대리",
+    "meaning": "대리",
     "day": 10,
     "level": "N3",
     "page": 36
@@ -5538,7 +5538,7 @@
     "id": 616,
     "kanji": "体力",
     "hiragana": "たいりょく",
-    "meaning": "체력, 힘, 체력",
+    "meaning": "체력, 힘",
     "day": 10,
     "level": "N3",
     "page": 36
@@ -5556,7 +5556,7 @@
     "id": 618,
     "kanji": "ただ",
     "hiragana": "ただ",
-    "meaning": "평범한, 보통의, 보통의",
+    "meaning": "평범한, 보통의",
     "day": 10,
     "level": "N3",
     "page": 37
@@ -7158,7 +7158,7 @@
     "id": 796,
     "kanji": "中",
     "hiragana": "なか",
-    "meaning": "내부, 내부, 사이",
+    "meaning": "내부, 사이",
     "day": 13,
     "level": "N3",
     "page": 47
@@ -7599,7 +7599,7 @@
     "id": 845,
     "kanji": "量",
     "hiragana": "りょう",
-    "meaning": "양, 양, 양",
+    "meaning": "양",
     "day": 14,
     "level": "N3",
     "page": 51
@@ -7725,7 +7725,7 @@
     "id": 859,
     "kanji": "月",
     "hiragana": "つき",
-    "meaning": "달, 달, 달빛",
+    "meaning": "달, 달빛",
     "day": 14,
     "level": "N3",
     "page": 51
@@ -7968,7 +7968,7 @@
     "id": 886,
     "kanji": "中",
     "hiragana": "なか",
-    "meaning": "내부, 내부, 사이",
+    "meaning": "내부, 사이",
     "day": 15,
     "level": "N3",
     "page": 53
