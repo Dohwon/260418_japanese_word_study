@@ -189,6 +189,14 @@ async function restoreServerSession() {
     const remoteState = createStateFromSnapshot(payload.state || {});
     const localUpdatedAt = Number(state.meta?.updatedAt) || 0;
     const remoteUpdatedAt = Number(remoteState.meta?.updatedAt) || 0;
+    const localHasProgress = hasMeaningfulProgressSnapshot(state);
+    const remoteHasProgress = hasMeaningfulProgressSnapshot(remoteState);
+
+    if (localHasProgress && !remoteHasProgress) {
+      await pushStateToServer();
+      runtime.auth.syncMessage = "현재 기기 학습 기록을 서버에 복구했습니다.";
+      return;
+    }
 
     if (remoteUpdatedAt > localUpdatedAt) {
       state = remoteState;
@@ -215,13 +223,23 @@ async function restoreServerSession() {
 }
 
 function hasMeaningfulLocalProgress() {
-  if (state.archiveRuns.length) {
+  return hasMeaningfulProgressSnapshot(state);
+}
+
+function hasMeaningfulProgressSnapshot(snapshot) {
+  if (!snapshot) {
+    return false;
+  }
+  if (snapshot.archiveRuns?.length) {
     return true;
   }
-  if (state.settings.randomOrder || state.settings.randomLevel) {
+  if (snapshot.settings?.randomOrder || snapshot.settings?.randomLevel) {
     return true;
   }
-  return words.some((word) => state.progress[word.uid].studyCount > 0);
+  return words.some((word) => {
+    const record = snapshot.progress?.[word.uid];
+    return (record?.studyCount || 0) > 0;
+  });
 }
 
 function queueServerSync() {

@@ -350,7 +350,7 @@ function sanitizeStateSnapshot(snapshot = {}) {
 
   return {
     meta: {
-      updatedAt: toNonNegativeNumber(snapshot.meta?.updatedAt) || Date.now(),
+      updatedAt: toNonNegativeNumber(snapshot.meta?.updatedAt),
     },
     settings: {
       randomOrder: Boolean(snapshot.settings?.randomOrder),
