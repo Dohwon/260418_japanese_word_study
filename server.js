@@ -14,6 +14,7 @@ const SESSION_COOKIE = "jlpt_auth";
 const SESSION_MAX_AGE_SEC = 60 * 60 * 24 * 30;
 const GOOGLE_TOKENINFO_URL = "https://oauth2.googleapis.com/tokeninfo";
 const SEMANTIC_MODEL_ID = process.env.SEMANTIC_MODEL_ID || "Xenova/paraphrase-multilingual-MiniLM-L12-v2";
+const MAX_JSON_BODY_BYTES = 1024 * 1024;
 
 const MIME_TYPES = {
   ".html": "text/html; charset=utf-8",
@@ -82,6 +83,11 @@ http
 
       await serveStatic(request, response, requestPath);
     } catch (error) {
+      if (error?.code === "BODY_TOO_LARGE") {
+        response.writeHead(413, { "Content-Type": MIME_TYPES[".json"] });
+        response.end(JSON.stringify({ error: "body_too_large" }));
+        return;
+      }
       console.error(error);
       response.writeHead(500, { "Content-Type": MIME_TYPES[".json"] });
       response.end(JSON.stringify({ error: "server_error" }));
@@ -626,14 +632,24 @@ function writeJson(response, payload) {
 function readJsonBody(request) {
   return new Promise((resolve, reject) => {
     let raw = "";
+    let rejected = false;
     request.setEncoding("utf8");
     request.on("data", (chunk) => {
+      if (rejected) {
+        return;
+      }
       raw += chunk;
-      if (raw.length > 1024 * 64) {
-        reject(new Error("Body too large"));
+      if (raw.length > MAX_JSON_BODY_BYTES) {
+        rejected = true;
+        const error = new Error("Body too large");
+        error.code = "BODY_TOO_LARGE";
+        reject(error);
       }
     });
     request.on("end", () => {
+      if (rejected) {
+        return;
+      }
       try {
         resolve(raw ? JSON.parse(raw) : {});
       } catch (error) {
