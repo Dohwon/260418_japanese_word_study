@@ -1527,14 +1527,22 @@ function renderProgressTable(items) {
   return `
     <div class="table-wrap">
       <table>
+        <colgroup>
+          <col class="col-kanji">
+          <col class="col-kana">
+          <col class="col-meaning">
+          <col class="col-level">
+          <col class="col-count">
+          <col class="col-count">
+        </colgroup>
         <thead>
           <tr>
             <th>한자</th>
             <th>히라가나</th>
             <th>뜻</th>
             <th>급수</th>
-            <th>틀린 횟수</th>
-            <th>맞은 횟수</th>
+            <th>틀린</th>
+            <th>맞은</th>
           </tr>
         </thead>
         <tbody>
@@ -1548,7 +1556,7 @@ function renderProgressTable(items) {
                       <tr class="${rowClass}">
                         <td class="jp-inline">${escapeHtml(word.kanji)}</td>
                         <td class="jp-inline">${escapeHtml(word.hiragana)}</td>
-                        <td>${escapeHtml(word.meaning)}</td>
+                        <td class="col-meaning">${escapeHtml(word.meaning)}</td>
                         <td>${word.level}</td>
                         <td>${record.wrongHits}</td>
                         <td>${record.correctHits}</td>
@@ -1588,13 +1596,20 @@ function renderCompletedTable(items) {
   return `
     <div class="table-wrap">
       <table>
+        <colgroup>
+          <col class="col-kanji">
+          <col class="col-kana">
+          <col class="col-meaning">
+          <col class="col-level">
+          <col class="col-count">
+        </colgroup>
         <thead>
           <tr>
             <th>한자</th>
             <th>히라가나</th>
             <th>뜻</th>
             <th>급수</th>
-            <th>공부한 횟수</th>
+            <th>학습</th>
           </tr>
         </thead>
         <tbody>
@@ -1607,7 +1622,7 @@ function renderCompletedTable(items) {
                       <tr>
                         <td class="jp-inline">${escapeHtml(word.kanji)}</td>
                         <td class="jp-inline">${escapeHtml(word.hiragana)}</td>
-                        <td>${escapeHtml(word.meaning)}</td>
+                        <td class="col-meaning">${escapeHtml(word.meaning)}</td>
                         <td>${word.level}</td>
                         <td>${record.studyCount}</td>
                       </tr>

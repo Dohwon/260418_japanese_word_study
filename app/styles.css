@@ -943,6 +943,18 @@ button {
 table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.table-wrap table col.col-kanji   { width: 10%; }
+.table-wrap table col.col-kana    { width: 14%; }
+.table-wrap table col.col-meaning { width: auto; }
+.table-wrap table col.col-level   { width: 7%; }
+.table-wrap table col.col-count   { width: 9%; }
+
+.table-wrap td {
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 
 th,
@@ -950,6 +962,13 @@ td {
   padding: 14px 12px;
   text-align: left;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+td.col-meaning {
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 
 thead th {
