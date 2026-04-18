@@ -80,7 +80,7 @@ function buildLevelCatalog() {
     N5: normalizeLevelData(typeof WORDS_DATA !== "undefined" ? WORDS_DATA : [], "N5"),
     N4: normalizeLevelData(typeof N4_VOCAB_DATA !== "undefined" ? N4_VOCAB_DATA : [], "N4"),
     N3: normalizeLevelData(typeof N3_VOCAB_DATA !== "undefined" ? N3_VOCAB_DATA : [], "N3"),
-    N2: [],
+    N2: normalizeLevelData(typeof N2_VOCAB_DATA !== "undefined" ? N2_VOCAB_DATA : [], "N2"),
     N1: [],
   };
 
@@ -448,16 +448,11 @@ function buildStudyQueue() {
     for (const word of levelWords) {
       const record = state.progress[word.uid];
       const isFresh = record.studyCount === 0;
-      const isDue = record.nextReviewAt <= now;
 
       if (isFresh) {
         if (randomLevel || word.day === focusDay) {
           pools.fresh.push(word);
         }
-        continue;
-      }
-
-      if (!isDue) {
         continue;
       }
 
@@ -492,22 +487,22 @@ function buildStudyQueue() {
   const randomize = randomOrder || randomLevel;
   const usedIds = new Set();
   const selected = [
-    ...takeStudyBucket(pools.fresh, 10, "fresh", randomize, usedIds),
-    ...takeStudyBucket(pools.wrong, 7, "wrong", randomize, usedIds),
-    ...takeStudyBucket(pools.hit1, 5, "hit1", randomize, usedIds),
-    ...takeStudyBucket(pools.hit2, 3, "hit2", randomize, usedIds),
-    ...takeStudyBucket(pools.hit3, 3, "hit3", randomize, usedIds),
-    ...takeStudyBucket(pools.hit4, 2, "hit4", true, usedIds),
+    ...takeStudyBucket(pools.fresh, 10, "fresh", randomize, usedIds, now),
+    ...takeStudyBucket(pools.wrong, 7, "wrong", randomize, usedIds, now),
+    ...takeStudyBucket(pools.hit1, 5, "hit1", randomize, usedIds, now),
+    ...takeStudyBucket(pools.hit2, 3, "hit2", randomize, usedIds, now),
+    ...takeStudyBucket(pools.hit3, 3, "hit3", randomize, usedIds, now),
+    ...takeStudyBucket(pools.hit4, 2, "hit4", true, usedIds, now),
   ];
 
   if (selected.length < 30) {
     const fallback = [
-      ...listStudyBucketCandidates(pools.fresh, "fresh", randomize, usedIds),
-      ...listStudyBucketCandidates(pools.wrong, "wrong", randomize, usedIds),
-      ...listStudyBucketCandidates(pools.hit1, "hit1", randomize, usedIds),
-      ...listStudyBucketCandidates(pools.hit2, "hit2", randomize, usedIds),
-      ...listStudyBucketCandidates(pools.hit3, "hit3", randomize, usedIds),
-      ...listStudyBucketCandidates(pools.hit4, "hit4", true, usedIds),
+      ...listStudyBucketCandidates(pools.wrong, "wrong", randomize, usedIds, now),
+      ...listStudyBucketCandidates(pools.hit1, "hit1", randomize, usedIds, now),
+      ...listStudyBucketCandidates(pools.hit2, "hit2", randomize, usedIds, now),
+      ...listStudyBucketCandidates(pools.hit3, "hit3", randomize, usedIds, now),
+      ...listStudyBucketCandidates(pools.hit4, "hit4", true, usedIds, now),
+      ...listStudyBucketCandidates(pools.fresh, "fresh", randomize, usedIds, now),
     ].slice(0, 30 - selected.length);
 
     selected.push(...fallback);
@@ -516,20 +511,21 @@ function buildStudyQueue() {
   return selected.map((word) => word.uid);
 }
 
-function takeStudyBucket(pool, targetCount, bucketType, randomize, usedIds) {
-  const picked = listStudyBucketCandidates(pool, bucketType, randomize, usedIds).slice(0, targetCount);
+function takeStudyBucket(pool, targetCount, bucketType, randomize, usedIds, now) {
+  const picked = listStudyBucketCandidates(pool, bucketType, randomize, usedIds, now).slice(0, targetCount);
   for (const word of picked) {
     usedIds.add(word.uid);
   }
   return picked;
 }
 
-function listStudyBucketCandidates(pool, bucketType, randomize, usedIds) {
+function listStudyBucketCandidates(pool, bucketType, randomize, usedIds, now) {
   return pool
     .filter((word) => !usedIds.has(word.uid))
     .map((word) => ({
       word,
       record: state.progress[word.uid],
+      isDue: state.progress[word.uid].nextReviewAt <= now,
       randomKey: Math.random(),
     }))
     .sort((left, right) => compareStudyCandidates(left, right, bucketType, randomize))
@@ -539,6 +535,15 @@ function listStudyBucketCandidates(pool, bucketType, randomize, usedIds) {
 function compareStudyCandidates(left, right, bucketType, randomize) {
   const leftRecord = left.record;
   const rightRecord = right.record;
+  const dueDiff = Number(right.isDue) - Number(left.isDue);
+  if (dueDiff !== 0) {
+    return dueDiff;
+  }
+
+  const nextReviewDiff = leftRecord.nextReviewAt - rightRecord.nextReviewAt;
+  if (!left.isDue && !right.isDue && nextReviewDiff !== 0) {
+    return nextReviewDiff;
+  }
 
   if (bucketType === "wrong") {
     const wrongDiff = rightRecord.wrongHits - leftRecord.wrongHits;
