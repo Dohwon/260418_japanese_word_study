@@ -47,6 +47,7 @@ const runtime = {
   route: "home",
   studyTab: "study",
   boardTab: "in-progress",
+  boardLevel: "all",
   studySession: null,
   archiveSession: null,
   timerId: null,
@@ -284,7 +285,7 @@ function syncRoute() {
 }
 
 function handleClick(event) {
-  const button = event.target.closest("[data-action], [data-route], [data-study-tab], [data-board-tab], [data-setting]");
+  const button = event.target.closest("[data-action], [data-route], [data-study-tab], [data-board-tab], [data-board-level], [data-setting]");
   if (!button) {
     return;
   }
@@ -314,6 +315,12 @@ function handleClick(event) {
 
   if (button.dataset.boardTab) {
     runtime.boardTab = button.dataset.boardTab;
+    render();
+    return;
+  }
+
+  if (button.dataset.boardLevel) {
+    runtime.boardLevel = button.dataset.boardLevel;
     render();
     return;
   }
@@ -1466,19 +1473,27 @@ function renderArchiveRecords(records) {
 }
 
 function renderBoardPage() {
-  const inProgress = words.filter((word) => state.progress[word.uid].stage < 4);
-  const archived = words.filter((word) => state.progress[word.uid].stage >= 4);
+  const availableLevels = getAvailableLevels();
+  const levelFilter = (word) => runtime.boardLevel === "all" || word.level === runtime.boardLevel;
+
+  const inProgress = words.filter((word) => state.progress[word.uid].stage < 4 && levelFilter(word));
+  const archived = words.filter((word) => state.progress[word.uid].stage >= 4 && levelFilter(word));
 
   return `
     <section class="table-panel">
       <div class="table-header">
         <div class="section-heading">
           <strong>전체 단어 확인하기</strong>
-          <span>진행 중인 카드와 완료된 아카이브 카드를 한 번에 확인합니다.</span>
         </div>
-        <div class="table-tabs">
-          <button class="tab-button ${runtime.boardTab === "in-progress" ? "is-active" : ""}" data-board-tab="in-progress">진행중</button>
-          <button class="tab-button ${runtime.boardTab === "completed" ? "is-active" : ""}" data-board-tab="completed">완료</button>
+        <div class="board-filter-row">
+          <div class="table-tabs">
+            <button class="tab-button ${runtime.boardTab === "in-progress" ? "is-active" : ""}" data-board-tab="in-progress">진행중</button>
+            <button class="tab-button ${runtime.boardTab === "completed" ? "is-active" : ""}" data-board-tab="completed">완료</button>
+          </div>
+          <div class="table-tabs">
+            <button class="tab-button ${runtime.boardLevel === "all" ? "is-active" : ""}" data-board-level="all">전체</button>
+            ${availableLevels.map((lv) => `<button class="tab-button ${runtime.boardLevel === lv ? "is-active" : ""}" data-board-level="${lv}">${lv}</button>`).join("")}
+          </div>
         </div>
       </div>
       ${

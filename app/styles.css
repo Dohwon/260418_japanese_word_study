@@ -87,7 +87,7 @@ button {
 .shell {
   width: var(--shell-width);
   margin: 0 auto;
-  padding: 24px 0 48px;
+  padding: 16px 0 40px;
 }
 
 .nav {
@@ -95,12 +95,15 @@ button {
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  padding: 18px 22px;
-  margin-bottom: 20px;
-  background: rgba(255, 255, 255, 0.68);
+  padding: 12px 18px;
+  margin-bottom: 16px;
+  background: rgba(255, 255, 255, 0.82);
   border-radius: 999px;
   backdrop-filter: blur(24px);
   box-shadow: 0 12px 30px rgba(84, 64, 136, 0.08);
+  position: sticky;
+  top: 12px;
+  z-index: 100;
 }
 
 .nav-brand {
@@ -531,23 +534,23 @@ button {
 }
 
 .study-board {
-  padding: 24px;
+  padding: 18px 24px;
 }
 
 .study-meta {
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  margin: 20px 0 24px;
+  margin: 12px 0 16px;
 }
 
 .meta-pill {
-  padding: 16px 18px;
-  border-radius: 22px;
+  padding: 10px 14px;
+  border-radius: 18px;
   background: rgba(255, 255, 255, 0.82);
 }
 
 .meta-pill strong {
   display: block;
-  font-size: 1.15rem;
+  font-size: 1rem;
 }
 
 .deck-shell {
@@ -666,7 +669,7 @@ button {
 
 .card-stage {
   position: relative;
-  min-height: 560px;
+  min-height: 460px;
   display: grid;
   place-items: center;
 }
@@ -1502,6 +1505,14 @@ tbody tr.is-wrong-5 td {
 
 .finish-study-button:hover {
   opacity: 1;
+}
+
+/* --- board level filter --- */
+.board-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
 }
 
 /* --- auth panel compact (signed in) --- */
