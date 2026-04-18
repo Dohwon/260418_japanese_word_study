@@ -14,7 +14,7 @@ const SESSION_COOKIE = "jlpt_auth";
 const SESSION_MAX_AGE_SEC = 60 * 60 * 24 * 30;
 const GOOGLE_TOKENINFO_URL = "https://oauth2.googleapis.com/tokeninfo";
 const SEMANTIC_MODEL_ID = process.env.SEMANTIC_MODEL_ID || "Xenova/paraphrase-multilingual-MiniLM-L12-v2";
-const MAX_JSON_BODY_BYTES = 1024 * 1024;
+const MAX_JSON_BODY_BYTES = 8 * 1024 * 1024;
 
 const MIME_TYPES = {
   ".html": "text/html; charset=utf-8",
