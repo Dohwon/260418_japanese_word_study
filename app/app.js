@@ -1505,14 +1505,14 @@ function renderBoardPage() {
           <strong>전체 단어 확인하기</strong>
         </div>
         <div class="board-filter-row">
-          <div class="table-tabs">
-            <button class="tab-button ${runtime.boardTab === "in-progress" ? "is-active" : ""}" data-board-tab="in-progress">진행중</button>
-            <button class="tab-button ${runtime.boardTab === "completed" ? "is-active" : ""}" data-board-tab="completed">완료</button>
-            <button class="tab-button ${runtime.boardTab === "wrong-only" ? "is-active" : ""}" data-board-tab="wrong-only">오답보기</button>
+          <div class="board-pill">
+            <button class="board-btn ${runtime.boardTab === "in-progress" ? "is-active" : ""}" data-board-tab="in-progress">진행중</button>
+            <button class="board-btn ${runtime.boardTab === "completed" ? "is-active" : ""}" data-board-tab="completed">완료</button>
+            <button class="board-btn ${runtime.boardTab === "wrong-only" ? "is-active" : ""}" data-board-tab="wrong-only">오답보기</button>
           </div>
-          <div class="level-filter">
-            <button class="level-filter-btn ${runtime.boardLevel === "all" ? "is-active" : ""}" data-board-level="all">전체<span class="level-count">${words.length}</span></button>
-            ${availableLevels.map((lv) => `<button class="level-filter-btn ${runtime.boardLevel === lv ? "is-active" : ""}" data-board-level="${lv}">${lv}<span class="level-count">${getWordsByLevel(lv).length}</span></button>`).join("")}
+          <div class="board-pill">
+            <button class="board-btn ${runtime.boardLevel === "all" ? "is-active" : ""}" data-board-level="all">전체<span class="level-count">${words.length}</span></button>
+            ${availableLevels.map((lv) => `<button class="board-btn ${runtime.boardLevel === lv ? "is-active" : ""}" data-board-level="${lv}">${lv}<span class="level-count">${getWordsByLevel(lv).length}</span></button>`).join("")}
           </div>
         </div>
       </div>
