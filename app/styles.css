@@ -1540,6 +1540,7 @@ tbody tr.is-wrong-5 td {
   align-items: center;
   gap: 2px;
   padding: 4px;
+  margin-bottom: 0;
   border-radius: 999px;
   background: rgba(93, 79, 192, 0.08);
 }
@@ -1555,6 +1556,8 @@ tbody tr.is-wrong-5 td {
   color: var(--text-soft);
   font-weight: 500;
   transition: background 140ms ease, color 140ms ease, box-shadow 140ms ease;
+  transform: none !important;
+  box-shadow: none;
 }
 
 .board-filter-row .tab-button:hover:not(.is-active) {
