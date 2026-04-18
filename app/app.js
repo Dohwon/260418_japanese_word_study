@@ -354,6 +354,16 @@ function handleClick(event) {
     return;
   }
 
+  if (action === "pause-archive") {
+    pauseArchiveSession();
+    return;
+  }
+
+  if (action === "resume-archive") {
+    resumeArchiveSession();
+    return;
+  }
+
   if (action === "restart-archive") {
     startArchiveSession();
     render();
@@ -531,7 +541,9 @@ function startArchiveSession() {
     cards: archivedWords,
     currentIndex: 0,
     wrongByWord: {},
-    startedAt: Date.now(),
+    startedAt: archivedWords.length ? Date.now() : 0,
+    elapsedMs: 0,
+    isPaused: !archivedWords.length,
     feedback: archivedWords.length ? "아카이브 단어 30개를 시작합니다." : "아직 아카이브에 들어간 단어가 없습니다.",
     motion: "",
     messageTone: "",
@@ -542,7 +554,7 @@ function startArchiveSession() {
 
 async function submitArchiveAnswer(rawAnswer) {
   const session = runtime.archiveSession;
-  if (!session || session.isAnimating) {
+  if (!session || session.isAnimating || session.isPaused) {
     return;
   }
 
@@ -598,8 +610,11 @@ async function submitArchiveAnswer(rawAnswer) {
     session.isAnimating = false;
 
     if (session.currentIndex >= session.cards.length && !session.completedAt) {
+      const elapsedMs = getArchiveElapsedMs(session);
+      session.elapsedMs = elapsedMs;
       session.completedAt = Date.now();
-      const elapsedMs = session.completedAt - session.startedAt;
+      session.isPaused = true;
+      session.startedAt = 0;
       state.archiveRuns.push({
         date: new Date().toISOString(),
         elapsedMs,
@@ -615,6 +630,46 @@ async function submitArchiveAnswer(rawAnswer) {
 
     render();
   }, 520);
+}
+
+function pauseArchiveSession() {
+  const session = runtime.archiveSession;
+  if (!session || session.completedAt || session.isPaused || !session.cards.length) {
+    return;
+  }
+
+  session.elapsedMs = getArchiveElapsedMs(session);
+  session.startedAt = 0;
+  session.isPaused = true;
+  session.feedback = "아카이브 시간을 잠시 멈췄습니다.";
+  session.messageTone = "";
+  render();
+}
+
+function resumeArchiveSession() {
+  const session = runtime.archiveSession;
+  if (!session || session.completedAt || !session.isPaused || !session.cards.length) {
+    return;
+  }
+
+  session.startedAt = Date.now();
+  session.isPaused = false;
+  session.feedback = "아카이브 시간을 다시 시작합니다.";
+  session.messageTone = "";
+  render();
+}
+
+function getArchiveElapsedMs(session) {
+  if (!session || !session.cards.length) {
+    return 0;
+  }
+  if (session.completedAt) {
+    return Number(session.elapsedMs) || 0;
+  }
+  if (session.isPaused || !session.startedAt) {
+    return Number(session.elapsedMs) || 0;
+  }
+  return (Number(session.elapsedMs) || 0) + Math.max(0, Date.now() - session.startedAt);
 }
 
 async function determineMeaningMatch(answer, meaning) {
@@ -781,6 +836,7 @@ function renderNav() {
 
 function renderAuthPanel() {
   if (runtime.auth.user) {
+    const syncDot = runtime.auth.syncMessage ? "🟢" : "🟠";
     return `
       <div class="auth-panel is-signed-in">
         <div class="auth-user">
@@ -791,13 +847,10 @@ function renderAuthPanel() {
           }
           <div class="auth-copy">
             <strong>${escapeHtml(runtime.auth.user.name || "Google 사용자")}</strong>
-            <span>${escapeHtml(runtime.auth.user.email || "동기화 저장 사용 중")}</span>
+            <span>${syncDot} ${escapeHtml(runtime.auth.user.email || "동기화 저장 사용 중")}</span>
           </div>
         </div>
-        <div class="auth-actions">
-          <div class="auth-note auth-note-inline">${escapeHtml(runtime.auth.syncMessage || "웹과 모바일에서 같은 계정 기록을 사용합니다.")}</div>
-          <button class="ghost-button auth-logout-button" data-action="logout">로그아웃</button>
-        </div>
+        <button class="ghost-button auth-logout-button" data-action="logout">로그아웃</button>
       </div>
     `;
   }
@@ -931,33 +984,16 @@ function renderHomePage() {
   const todayCount = words.filter((word) => state.progress[word.uid].lastStudiedDay === getTodayKey()).length;
   const currentLevel = getCurrentLevel();
   const currentDay = getCurrentDay(currentLevel);
-  const availableLevels = getAvailableLevels();
   const progressPercent = totalCount ? Math.round((learnedCount / totalCount) * 100) : 0;
 
   return `
-    <section class="hero">
+    <section class="hero hero-compact">
       <div class="hero-copy">
         <div class="eyebrow">JLPT 5급부터 차례대로</div>
         <h1 class="hero-title">한 장씩 넘기면서 <span class="jp">ことば</span>를 쌓는 단어장</h1>
-        <p class="hero-description">
-          기본 흐름은 PDF 순서를 따라갑니다. 지금은 <strong>${currentLevel}</strong> ${currentDay}일차를 기준으로 새 카드를 꺼내고,
-          복습 카드와 틀린 카드까지 한 묶음으로 다시 보여줍니다.
-        </p>
         <div class="hero-actions">
-          <button class="hero-cta" data-route="study">단어 공부하기</button>
-          <button class="hero-secondary" data-route="board">전체 오답 확인하기</button>
-        </div>
-      </div>
-      <div class="hero-aside">
-        <div class="hero-card">
-          <div class="jp">勉強</div>
-          <p>귀여운 둥근 일본어 타이포와 부드러운 카드 더미를 중심으로, 맞으면 오른쪽으로 넘기고 틀리면 왼쪽으로 쌓입니다.</p>
-        </div>
-        <div class="hero-card">
-          <div class="petal-row">
-            ${Array.from({ length: 5 }, (_, index) => `<span class="petal ${index < Math.max(1, Math.round(progressPercent / 20)) ? "is-filled" : ""}"></span>`).join("")}
-          </div>
-          <p>현재 구조화된 데이터는 ${availableLevels.join(", ")} 급수입니다. 이후 같은 형식의 데이터가 추가되면 바로 이어집니다.</p>
+          <button class="hero-cta" data-route="study">단어 공부 시작하기</button>
+          <button class="hero-secondary" data-route="board">오답 목록 보기</button>
         </div>
       </div>
     </section>
@@ -965,8 +1001,8 @@ function renderHomePage() {
     <section class="stats-grid">
       <article class="stat-card">
         <div class="stat-copy">
-          <span>전체 단어 대비 학습 비율</span>
-          <strong>${progressPercent}%</strong>
+          <span>전체 학습 비율</span>
+          <strong class="stat-num">${progressPercent}%</strong>
         </div>
         <div class="progress-bar">
           <div class="progress-fill" style="width: ${progressPercent}%"></div>
@@ -976,16 +1012,16 @@ function renderHomePage() {
       <article class="stat-card">
         <div class="stat-copy">
           <span>오늘 학습한 단어</span>
-          <strong>${todayCount}</strong>
+          <strong class="stat-num">${todayCount}</strong>
         </div>
-        <span class="footer-note">오늘 날짜 기준으로 한 번 이상 본 단어 수</span>
+        <span class="footer-note">오늘 한 번 이상 본 단어</span>
       </article>
       <article class="stat-card">
         <div class="stat-copy">
-          <span>현재 진행 급수 / 챕터</span>
-          <strong>${currentLevel} · ${currentDay}일차</strong>
+          <span>현재 급수 / 챕터</span>
+          <strong class="stat-num stat-num-sm">${currentLevel} · ${currentDay}일차</strong>
         </div>
-        <span class="footer-note">동일 급수를 끝까지 유지하고, 마스터 비율이 95%를 넘으면 다음 급수로 이동합니다.</span>
+        <span class="footer-note">완료율 95% 초과 시 다음 급수로 이동</span>
       </article>
     </section>
 
@@ -993,7 +1029,6 @@ function renderHomePage() {
       <div class="panel-header">
         <div class="section-heading">
           <strong>급수 진행 상태</strong>
-          <span>N5에서 시작해서 완료 비율이 높은 순서대로 다음 급수로 넘어갑니다.</span>
         </div>
       </div>
       <div class="level-grid">
@@ -1006,10 +1041,11 @@ function renderHomePage() {
 function renderLevelChip(level, isCurrent) {
   const levelWords = getWordsByLevel(level);
   const completion = levelWords.length ? Math.round(getLevelCompletion(level) * 100) : 0;
+  const isDim = !isCurrent && levelWords.length === 0;
   return `
-    <div class="level-chip ${isCurrent ? "is-current" : ""}">
+    <div class="level-chip ${isCurrent ? "is-current" : ""} ${isDim ? "is-dim" : ""}">
       <strong>${level}</strong>
-      <small>${levelWords.length ? `${levelWords.length}단어 · 완료 ${completion}%` : "데이터 준비 중"}</small>
+      <small>${levelWords.length ? `${levelWords.length}단어 · ${completion}%` : "준비 중"}</small>
     </div>
   `;
 }
@@ -1028,7 +1064,6 @@ function renderStudyPage() {
       <div class="study-header">
         <div class="section-heading">
           <strong>단어 공부하기</strong>
-          <span>기본은 PDF 순서, 필요할 때만 랜덤 순서와 랜덤 급수 모드를 섞습니다.</span>
         </div>
         <div class="tabs">
           <button class="tab-button ${runtime.studyTab === "study" ? "is-active" : ""}" data-study-tab="study">공부하기</button>
@@ -1056,29 +1091,13 @@ function renderStudyPage() {
                 <strong>${archiveCount}장</strong>
               </div>
             </div>
-            <div class="mode-grid">
-              <div class="panel">
-                <div class="panel-header">
-                  <div class="section-heading">
-                    <strong>문제 생성 모드</strong>
-                    <span>평소에는 DATA 순서를 따르고, 버튼을 켜면 묶음만 바뀝니다.</span>
-                  </div>
-                </div>
-                <div class="mode-buttons">
-                  <button class="mode-button ${state.settings.randomOrder ? "is-active" : ""}" data-setting="randomOrder">랜덤 순서 모드</button>
-                  <button class="mode-button ${state.settings.randomLevel ? "is-active" : ""}" data-setting="randomLevel">랜덤 급수 모드</button>
-                  <button class="ghost-button" data-action="regenerate-study">새 카드 묶기</button>
-                </div>
+            <div class="mode-controls">
+              <div class="mode-buttons">
+                <button class="mode-button ${state.settings.randomOrder ? "is-active" : ""}" data-setting="randomOrder">랜덤 순서</button>
+                <button class="mode-button ${state.settings.randomLevel ? "is-active" : ""}" data-setting="randomLevel">랜덤 급수</button>
+                <button class="ghost-button" data-action="regenerate-study">새 카드 묶기</button>
               </div>
-              <div class="panel">
-                <div class="panel-header">
-                  <div class="section-heading">
-                    <strong>묶음 규칙</strong>
-                    <span>모르는 카드 10, 1회 맞춘 카드 10, 2회 5, 3회 5, 4회 이상 5장 랜덤</span>
-                  </div>
-                </div>
-                <span class="footer-note">틀린 카드는 다음 묶음에서 다시 나오고, 맞은 카드는 2일, 3일, 1주 뒤 순서로 돌아옵니다.</span>
-              </div>
+              <span class="bundle-rule-note">묶음 규칙: 모르는 카드 10, 1회 맞춘 10, 2회 5, 3회 5, 4회 이상 5장</span>
             </div>
             ${renderStudyDeck(current, total)}
           `
@@ -1106,7 +1125,7 @@ function renderStudyDeck(current, total) {
     return `
       <div class="empty-card">
         <p>${session.message}</p>
-        <button class="primary-button" data-action="finish-study">공부 종료</button>
+        <button class="ghost-button finish-study-button" data-action="finish-study">공부 종료</button>
       </div>
     `;
   }
@@ -1241,6 +1260,7 @@ function renderArchivePanel() {
   }
 
   const word = session.cards[session.currentIndex];
+  const elapsedLabel = formatDuration(getArchiveElapsedMs(session));
   return `
     <div class="archive-layout">
       <div class="panel archive-card-stage">
@@ -1251,7 +1271,16 @@ function renderArchivePanel() {
           </div>
           <div class="utility-row">
             <span class="table-badge">${session.cards.length ? `${Math.min(session.currentIndex + 1, session.cards.length)} / ${session.cards.length}` : "0 / 0"}</span>
-            <span class="table-badge">경과 ${formatDuration((session.completedAt || Date.now()) - session.startedAt)}</span>
+            <span class="table-badge">${session.cards.length ? `경과 ${elapsedLabel}` : "기록 대기 중"}</span>
+            ${
+              word && !session.completedAt
+                ? `
+                  <button class="ghost-button" data-action="${session.isPaused ? "resume-archive" : "pause-archive"}">
+                    ${session.isPaused ? "아카이브 재개" : "아카이브 일시정지"}
+                  </button>
+                `
+                : ""
+            }
           </div>
         </div>
         ${
@@ -1276,8 +1305,8 @@ function renderArchivePanel() {
               <form class="study-form" data-form="archive-answer">
                 <input class="study-input" type="text" name="answer" placeholder="뜻을 적고 Enter" autocomplete="off" />
                 <div class="study-form-row">
-                  <span class="helper-text">아카이브는 시간 기록이 남습니다.</span>
-                  <button class="study-submit" type="submit" ${session.isAnimating ? "disabled" : ""}>아카이브 답안 제출</button>
+                  <span class="helper-text">${session.isPaused ? "일시정지 중에는 시간이 오르지 않고 답안도 잠깁니다." : "아카이브는 시간 기록이 남습니다."}</span>
+                  <button class="study-submit" type="submit" ${session.isAnimating || session.isPaused ? "disabled" : ""}>아카이브 답안 제출</button>
                 </div>
               </form>
             `
@@ -1638,7 +1667,13 @@ function startClock() {
     window.clearInterval(runtime.timerId);
   }
   runtime.timerId = window.setInterval(() => {
-    if (runtime.route === "study" && runtime.studyTab === "archive" && runtime.archiveSession && !runtime.archiveSession.completedAt) {
+    if (
+      runtime.route === "study" &&
+      runtime.studyTab === "archive" &&
+      runtime.archiveSession &&
+      !runtime.archiveSession.completedAt &&
+      !runtime.archiveSession.isPaused
+    ) {
       render();
     }
   }, 1000);
