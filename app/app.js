@@ -1511,8 +1511,8 @@ function renderBoardPage() {
             <button class="tab-button ${runtime.boardTab === "wrong-only" ? "is-active" : ""}" data-board-tab="wrong-only">오답보기</button>
           </div>
           <div class="level-filter">
-            <button class="level-filter-btn ${runtime.boardLevel === "all" ? "is-active" : ""}" data-board-level="all">전체</button>
-            ${availableLevels.map((lv) => `<button class="level-filter-btn ${runtime.boardLevel === lv ? "is-active" : ""}" data-board-level="${lv}">${lv}</button>`).join("")}
+            <button class="level-filter-btn ${runtime.boardLevel === "all" ? "is-active" : ""}" data-board-level="all">전체<span class="level-count">${words.length}</span></button>
+            ${availableLevels.map((lv) => `<button class="level-filter-btn ${runtime.boardLevel === lv ? "is-active" : ""}" data-board-level="${lv}">${lv}<span class="level-count">${getWordsByLevel(lv).length}</span></button>`).join("")}
           </div>
         </div>
       </div>
