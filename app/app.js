@@ -1496,6 +1496,7 @@ function renderBoardPage() {
 
   const inProgress = words.filter((word) => state.progress[word.uid].stage < 4 && levelFilter(word));
   const archived = words.filter((word) => state.progress[word.uid].stage >= 4 && levelFilter(word));
+  const wrongOnly = words.filter((word) => state.progress[word.uid].wrongHits > 0 && levelFilter(word));
 
   return `
     <section class="table-panel">
@@ -1507,6 +1508,7 @@ function renderBoardPage() {
           <div class="table-tabs">
             <button class="tab-button ${runtime.boardTab === "in-progress" ? "is-active" : ""}" data-board-tab="in-progress">진행중</button>
             <button class="tab-button ${runtime.boardTab === "completed" ? "is-active" : ""}" data-board-tab="completed">완료</button>
+            <button class="tab-button ${runtime.boardTab === "wrong-only" ? "is-active" : ""}" data-board-tab="wrong-only">오답보기</button>
           </div>
           <div class="level-filter">
             <button class="level-filter-btn ${runtime.boardLevel === "all" ? "is-active" : ""}" data-board-level="all">전체</button>
@@ -1517,7 +1519,9 @@ function renderBoardPage() {
       ${
         runtime.boardTab === "in-progress"
           ? renderProgressTable(inProgress)
-          : renderCompletedTable(archived)
+          : runtime.boardTab === "completed"
+            ? renderCompletedTable(archived)
+            : renderWrongOnlyTable(wrongOnly)
       }
     </section>
   `;
@@ -1632,6 +1636,77 @@ function renderCompletedTable(items) {
               : `
                 <tr>
                   <td colspan="5">완료된 단어가 없습니다.</td>
+                </tr>
+              `
+          }
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function renderWrongOnlyTable(items) {
+  return `
+    <div class="table-wrap">
+      <table>
+        <colgroup>
+          <col class="col-kanji">
+          <col class="col-kana">
+          <col class="col-meaning">
+          <col class="col-level">
+          <col class="col-count">
+          <col class="col-count">
+          <col class="col-status">
+        </colgroup>
+        <thead>
+          <tr>
+            <th>한자</th>
+            <th>히라가나</th>
+            <th>뜻</th>
+            <th>급수</th>
+            <th>틀린</th>
+            <th>맞은</th>
+            <th>상태</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${
+            items.length
+              ? items
+                  .slice()
+                  .sort((left, right) => {
+                    const wrongDiff = state.progress[right.uid].wrongHits - state.progress[left.uid].wrongHits;
+                    if (wrongDiff !== 0) {
+                      return wrongDiff;
+                    }
+                    const levelDiff = LEVELS.indexOf(left.level) - LEVELS.indexOf(right.level);
+                    if (levelDiff !== 0) {
+                      return levelDiff;
+                    }
+                    if (left.day !== right.day) {
+                      return left.day - right.day;
+                    }
+                    return left.order - right.order;
+                  })
+                  .map((word) => {
+                    const record = state.progress[word.uid];
+                    const rowClass = getWrongHighlightClass(record.wrongHits);
+                    return `
+                      <tr class="${rowClass}">
+                        <td class="jp-inline">${escapeHtml(word.kanji)}</td>
+                        <td class="jp-inline">${escapeHtml(word.hiragana)}</td>
+                        <td class="col-meaning">${escapeHtml(word.meaning)}</td>
+                        <td>${word.level}</td>
+                        <td>${record.wrongHits}</td>
+                        <td>${record.correctHits}</td>
+                        <td>${record.stage >= 4 ? "완료" : "진행중"}</td>
+                      </tr>
+                    `;
+                  })
+                  .join("")
+              : `
+                <tr>
+                  <td colspan="7">오답 기록이 있는 단어가 없습니다.</td>
                 </tr>
               `
           }

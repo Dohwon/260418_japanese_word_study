@@ -1534,6 +1534,19 @@ tbody tr.is-wrong-5 td {
   gap: 10px;
 }
 
+.board-filter-row .table-tabs,
+.board-filter-row .level-filter {
+  min-height: 46px;
+}
+
+.board-filter-row .table-tabs {
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(93, 79, 192, 0.08);
+}
+
 .level-filter {
   display: flex;
   align-items: center;
@@ -1544,7 +1557,8 @@ tbody tr.is-wrong-5 td {
 }
 
 .level-filter-btn {
-  padding: 6px 13px;
+  min-height: 38px;
+  padding: 8px 13px;
   border-radius: 999px;
   background: transparent;
   color: var(--text-soft);
@@ -1564,6 +1578,14 @@ tbody tr.is-wrong-5 td {
 .level-filter-btn:hover:not(.is-active) {
   background: rgba(255, 255, 255, 0.6);
   color: var(--text);
+}
+
+.board-filter-row .tab-button {
+  min-height: 38px;
+  padding: 8px 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* --- auth panel compact (signed in) --- */
