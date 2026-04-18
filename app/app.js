@@ -403,15 +403,17 @@ function ensureStudySession() {
 function buildStudyQueue() {
   const randomOrder = state.settings.randomOrder;
   const randomLevel = state.settings.randomLevel;
+  const now = Date.now();
   const selectedLevels = randomLevel ? getAvailableLevels() : [getCurrentLevel()];
   const perLevelFocusDay = Object.fromEntries(selectedLevels.map((level) => [level, getCurrentDay(level)]));
 
   const pools = {
-    0: [],
-    1: [],
-    2: [],
-    3: [],
-    4: [],
+    fresh: [],
+    wrong: [],
+    hit1: [],
+    hit2: [],
+    hit3: [],
+    hit4: [],
   };
 
   for (const level of selectedLevels) {
@@ -420,48 +422,144 @@ function buildStudyQueue() {
 
     for (const word of levelWords) {
       const record = state.progress[word.uid];
-      const isDue = record.nextReviewAt <= Date.now();
       const isFresh = record.studyCount === 0;
+      const isDue = record.nextReviewAt <= now;
 
-      if (record.stage === 0) {
-        if (randomLevel) {
-          if (isFresh || isDue) {
-            pools[0].push(word);
-          }
-          continue;
-        }
-
-        if (isFresh && word.day === focusDay) {
-          pools[0].push(word);
-          continue;
-        }
-
-        if (!isFresh && isDue && word.day <= focusDay) {
-          pools[0].push(word);
+      if (isFresh) {
+        if (randomLevel || word.day === focusDay) {
+          pools.fresh.push(word);
         }
         continue;
       }
 
-      if (record.stage >= 1 && record.stage <= 3 && isDue) {
-        pools[record.stage].push(word);
+      if (!isDue) {
+        continue;
       }
 
-      if (record.stage >= 4) {
-        pools[4].push(word);
+      const effectiveHits = getEffectiveCorrectCount(record);
+
+      if (record.wrongHits > 0 && effectiveHits === 0) {
+        pools.wrong.push(word);
+        continue;
+      }
+
+      if (effectiveHits === 1) {
+        pools.hit1.push(word);
+        continue;
+      }
+
+      if (effectiveHits === 2) {
+        pools.hit2.push(word);
+        continue;
+      }
+
+      if (effectiveHits === 3) {
+        pools.hit3.push(word);
+        continue;
+      }
+
+      if (effectiveHits >= 4) {
+        pools.hit4.push(word);
       }
     }
   }
 
-  const sortFn = randomOrder || randomLevel ? shuffled : ordered;
+  const randomize = randomOrder || randomLevel;
+  const usedIds = new Set();
   const selected = [
-    ...sortFn(pools[0]).slice(0, 10),
-    ...sortFn(pools[1]).slice(0, 10),
-    ...sortFn(pools[2]).slice(0, 5),
-    ...sortFn(pools[3]).slice(0, 5),
-    ...shuffled(pools[4]).slice(0, 5),
+    ...takeStudyBucket(pools.fresh, 10, "fresh", randomize, usedIds),
+    ...takeStudyBucket(pools.wrong, 7, "wrong", randomize, usedIds),
+    ...takeStudyBucket(pools.hit1, 5, "hit1", randomize, usedIds),
+    ...takeStudyBucket(pools.hit2, 3, "hit2", randomize, usedIds),
+    ...takeStudyBucket(pools.hit3, 3, "hit3", randomize, usedIds),
+    ...takeStudyBucket(pools.hit4, 2, "hit4", true, usedIds),
   ];
 
-  return dedupeByUid(selected).map((word) => word.uid);
+  if (selected.length < 30) {
+    const fallback = [
+      ...listStudyBucketCandidates(pools.fresh, "fresh", randomize, usedIds),
+      ...listStudyBucketCandidates(pools.wrong, "wrong", randomize, usedIds),
+      ...listStudyBucketCandidates(pools.hit1, "hit1", randomize, usedIds),
+      ...listStudyBucketCandidates(pools.hit2, "hit2", randomize, usedIds),
+      ...listStudyBucketCandidates(pools.hit3, "hit3", randomize, usedIds),
+      ...listStudyBucketCandidates(pools.hit4, "hit4", true, usedIds),
+    ].slice(0, 30 - selected.length);
+
+    selected.push(...fallback);
+  }
+
+  return selected.map((word) => word.uid);
+}
+
+function takeStudyBucket(pool, targetCount, bucketType, randomize, usedIds) {
+  const picked = listStudyBucketCandidates(pool, bucketType, randomize, usedIds).slice(0, targetCount);
+  for (const word of picked) {
+    usedIds.add(word.uid);
+  }
+  return picked;
+}
+
+function listStudyBucketCandidates(pool, bucketType, randomize, usedIds) {
+  return pool
+    .filter((word) => !usedIds.has(word.uid))
+    .map((word) => ({
+      word,
+      record: state.progress[word.uid],
+      randomKey: Math.random(),
+    }))
+    .sort((left, right) => compareStudyCandidates(left, right, bucketType, randomize))
+    .map((entry) => entry.word);
+}
+
+function compareStudyCandidates(left, right, bucketType, randomize) {
+  const leftRecord = left.record;
+  const rightRecord = right.record;
+
+  if (bucketType === "wrong") {
+    const wrongDiff = rightRecord.wrongHits - leftRecord.wrongHits;
+    if (wrongDiff !== 0) {
+      return wrongDiff;
+    }
+
+    const effectiveDiff = getEffectiveCorrectCount(leftRecord) - getEffectiveCorrectCount(rightRecord);
+    if (effectiveDiff !== 0) {
+      return effectiveDiff;
+    }
+  }
+
+  const studyCountDiff = leftRecord.studyCount - rightRecord.studyCount;
+  if (studyCountDiff !== 0) {
+    return studyCountDiff;
+  }
+
+  const lastStudiedDiff = leftRecord.lastStudiedAt - rightRecord.lastStudiedAt;
+  if (lastStudiedDiff !== 0) {
+    return lastStudiedDiff;
+  }
+
+  if (randomize) {
+    const randomDiff = left.randomKey - right.randomKey;
+    if (randomDiff !== 0) {
+      return randomDiff;
+    }
+  }
+
+  return compareWordSequence(left.word, right.word);
+}
+
+function getEffectiveCorrectCount(record) {
+  return Math.max(0, (Number(record.correctHits) || 0) - (Number(record.wrongHits) || 0));
+}
+
+function compareWordSequence(leftWord, rightWord) {
+  const levelDiff = LEVELS.indexOf(leftWord.level) - LEVELS.indexOf(rightWord.level);
+  if (levelDiff !== 0) {
+    return levelDiff;
+  }
+  if (leftWord.day !== rightWord.day) {
+    return leftWord.day - rightWord.day;
+  }
+  return leftWord.order - rightWord.order;
 }
 
 async function submitStudyAnswer(rawAnswer) {
