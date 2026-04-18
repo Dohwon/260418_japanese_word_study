@@ -1508,9 +1508,9 @@ function renderBoardPage() {
             <button class="tab-button ${runtime.boardTab === "in-progress" ? "is-active" : ""}" data-board-tab="in-progress">진행중</button>
             <button class="tab-button ${runtime.boardTab === "completed" ? "is-active" : ""}" data-board-tab="completed">완료</button>
           </div>
-          <div class="table-tabs">
-            <button class="tab-button ${runtime.boardLevel === "all" ? "is-active" : ""}" data-board-level="all">전체</button>
-            ${availableLevels.map((lv) => `<button class="tab-button ${runtime.boardLevel === lv ? "is-active" : ""}" data-board-level="${lv}">${lv}</button>`).join("")}
+          <div class="level-filter">
+            <button class="level-filter-btn ${runtime.boardLevel === "all" ? "is-active" : ""}" data-board-level="all">전체</button>
+            ${availableLevels.map((lv) => `<button class="level-filter-btn ${runtime.boardLevel === lv ? "is-active" : ""}" data-board-level="${lv}">${lv}</button>`).join("")}
           </div>
         </div>
       </div>

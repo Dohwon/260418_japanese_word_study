@@ -1515,6 +1515,38 @@ tbody tr.is-wrong-5 td {
   gap: 10px;
 }
 
+.level-filter {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(93, 79, 192, 0.08);
+}
+
+.level-filter-btn {
+  padding: 6px 13px;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-soft);
+  font-size: 0.88rem;
+  font-weight: 500;
+  transition: background 140ms ease, color 140ms ease, box-shadow 140ms ease;
+  white-space: nowrap;
+}
+
+.level-filter-btn.is-active {
+  background: #fff;
+  color: var(--primary-strong);
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(93, 79, 192, 0.14);
+}
+
+.level-filter-btn:hover:not(.is-active) {
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--text);
+}
+
 /* --- auth panel compact (signed in) --- */
 .auth-panel.is-signed-in .auth-user {
   flex: 1 1 0;
