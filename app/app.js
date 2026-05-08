@@ -137,14 +137,108 @@ function createStateFromSnapshot(snapshot = {}) {
   };
 }
 
+function buildCompactStateSnapshot(snapshot = state) {
+  const compactProgress = {};
+
+  for (const word of words) {
+    const record = snapshot.progress?.[word.uid];
+    if (!record) {
+      continue;
+    }
+
+    if (
+      record.stage > 0 ||
+      record.studyCount > 0 ||
+      record.correctHits > 0 ||
+      record.wrongHits > 0 ||
+      record.nextReviewAt > 0 ||
+      record.lastStudiedAt > 0 ||
+      record.lastStudiedDay
+    ) {
+      compactProgress[word.uid] = {
+        stage: record.stage,
+        studyCount: record.studyCount,
+        correctHits: record.correctHits,
+        wrongHits: record.wrongHits,
+        nextReviewAt: record.nextReviewAt,
+        lastStudiedAt: record.lastStudiedAt,
+        lastStudiedDay: record.lastStudiedDay,
+      };
+    }
+  }
+
+  return {
+    meta: {
+      updatedAt: Number(snapshot.meta?.updatedAt) || 0,
+    },
+    settings: {
+      randomOrder: Boolean(snapshot.settings?.randomOrder),
+      randomLevel: Boolean(snapshot.settings?.randomLevel),
+    },
+    archiveRuns: Array.isArray(snapshot.archiveRuns) ? snapshot.archiveRuns.slice(0, 25) : [],
+    progress: compactProgress,
+  };
+}
+
+function mergeStateSnapshots(localState, remoteState) {
+  const mergedProgress = {};
+
+  for (const word of words) {
+    const localRecord = localState.progress[word.uid];
+    const remoteRecord = remoteState.progress[word.uid];
+    const localIsNewer = (localRecord?.lastStudiedAt || 0) >= (remoteRecord?.lastStudiedAt || 0);
+    const newerRecord = localIsNewer ? localRecord : remoteRecord;
+    const olderRecord = localIsNewer ? remoteRecord : localRecord;
+
+    mergedProgress[word.uid] = {
+      stage: Math.max(localRecord?.stage || 0, remoteRecord?.stage || 0),
+      studyCount: Math.max(localRecord?.studyCount || 0, remoteRecord?.studyCount || 0),
+      correctHits: Math.max(localRecord?.correctHits || 0, remoteRecord?.correctHits || 0),
+      wrongHits: Math.max(localRecord?.wrongHits || 0, remoteRecord?.wrongHits || 0),
+      nextReviewAt: Math.max(localRecord?.nextReviewAt || 0, remoteRecord?.nextReviewAt || 0),
+      lastStudiedAt: Math.max(localRecord?.lastStudiedAt || 0, remoteRecord?.lastStudiedAt || 0),
+      lastStudiedDay: newerRecord?.lastStudiedDay || olderRecord?.lastStudiedDay || "",
+    };
+  }
+
+  const archiveRuns = [...(localState.archiveRuns || []), ...(remoteState.archiveRuns || [])]
+    .filter((item) => item?.date)
+    .map((item) => ({
+      date: item.date,
+      elapsedMs: Number(item.elapsedMs) || 0,
+    }))
+    .filter((item, index, array) => array.findIndex((candidate) => candidate.date === item.date && candidate.elapsedMs === item.elapsedMs) === index)
+    .sort((left, right) => left.elapsedMs - right.elapsedMs)
+    .slice(0, 25);
+
+  const preferLocalSettings = (Number(localState.meta?.updatedAt) || 0) >= (Number(remoteState.meta?.updatedAt) || 0);
+  const preferredSettings = preferLocalSettings ? localState.settings : remoteState.settings;
+
+  return {
+    meta: {
+      updatedAt: Math.max(Number(localState.meta?.updatedAt) || 0, Number(remoteState.meta?.updatedAt) || 0),
+    },
+    settings: {
+      randomOrder: Boolean(preferredSettings?.randomOrder),
+      randomLevel: Boolean(preferredSettings?.randomLevel),
+    },
+    archiveRuns,
+    progress: mergedProgress,
+  };
+}
+
+function getStateSnapshotSignature(snapshot) {
+  return JSON.stringify(buildCompactStateSnapshot(snapshot));
+}
+
 function saveState() {
   state.meta.updatedAt = Date.now();
-  localStorage.setItem(APP_STORAGE_KEY, JSON.stringify(state));
+  localStorage.setItem(APP_STORAGE_KEY, JSON.stringify(buildCompactStateSnapshot(state)));
   queueServerSync();
 }
 
 function saveStateLocallyOnly() {
-  localStorage.setItem(APP_STORAGE_KEY, JSON.stringify(state));
+  localStorage.setItem(APP_STORAGE_KEY, JSON.stringify(buildCompactStateSnapshot(state)));
 }
 
 async function bootApp() {
@@ -187,32 +281,26 @@ async function restoreServerSession() {
     }
 
     const remoteState = createStateFromSnapshot(payload.state || {});
-    const localUpdatedAt = Number(state.meta?.updatedAt) || 0;
-    const remoteUpdatedAt = Number(remoteState.meta?.updatedAt) || 0;
-    const localHasProgress = hasMeaningfulProgressSnapshot(state);
-    const remoteHasProgress = hasMeaningfulProgressSnapshot(remoteState);
+    const mergedState = mergeStateSnapshots(state, remoteState);
+    const localSignature = getStateSnapshotSignature(state);
+    const remoteSignature = getStateSnapshotSignature(remoteState);
+    const mergedSignature = getStateSnapshotSignature(mergedState);
+    const mergedIntoLocal = mergedSignature !== localSignature;
+    const mergedIntoRemote = mergedSignature !== remoteSignature;
 
-    if (localHasProgress && !remoteHasProgress) {
-      await pushStateToServer();
-      runtime.auth.syncMessage = "현재 기기 학습 기록을 서버에 복구했습니다.";
-      return;
-    }
-
-    if (remoteUpdatedAt > localUpdatedAt) {
-      state = remoteState;
+    if (mergedIntoLocal) {
+      state = mergedState;
       saveStateLocallyOnly();
-      runtime.auth.syncMessage = "서버에 저장된 학습 기록으로 동기화했습니다.";
-      return;
     }
 
-    if (localUpdatedAt > remoteUpdatedAt || hasMeaningfulLocalProgress()) {
+    if (mergedIntoRemote) {
       await pushStateToServer();
-      runtime.auth.syncMessage = "현재 기기 학습 기록을 서버에 동기화했습니다.";
+      runtime.auth.syncMessage = hasMeaningfulProgressSnapshot(remoteState)
+        ? "계정 학습 기록을 병합 동기화했습니다."
+        : "현재 기기 학습 기록을 서버에 복구했습니다.";
       return;
     }
 
-    state = remoteState;
-    saveStateLocallyOnly();
     runtime.auth.syncMessage = "계정 학습 기록이 이미 최신 상태입니다.";
   } catch (error) {
     runtime.auth.status = "ready";
@@ -268,7 +356,7 @@ async function pushStateToServer() {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ state }),
+    body: JSON.stringify({ state: buildCompactStateSnapshot(state) }),
   });
 
   if (!response.ok) {
