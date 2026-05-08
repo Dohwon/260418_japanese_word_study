@@ -980,11 +980,16 @@ tbody tr {
   border-top: 1px solid rgba(93, 79, 192, 0.08);
 }
 
+tbody tr.is-wrong-1 td,
 tbody tr.is-wrong-2 td,
 tbody tr.is-wrong-3 td,
 tbody tr.is-wrong-4 td,
 tbody tr.is-wrong-5 td {
   background-clip: padding-box;
+}
+
+tbody tr.is-wrong-1 td {
+  background: rgba(255, 243, 246, 0.78);
 }
 
 tbody tr.is-wrong-2 td {
@@ -1003,6 +1008,7 @@ tbody tr.is-wrong-5 td {
   background: rgba(248, 164, 182, 0.98);
 }
 
+tbody tr.is-wrong-1 td:first-child,
 tbody tr.is-wrong-2 td:first-child,
 tbody tr.is-wrong-3 td:first-child,
 tbody tr.is-wrong-4 td:first-child,
@@ -1011,6 +1017,7 @@ tbody tr.is-wrong-5 td:first-child {
   border-bottom-left-radius: 14px;
 }
 
+tbody tr.is-wrong-1 td:last-child,
 tbody tr.is-wrong-2 td:last-child,
 tbody tr.is-wrong-3 td:last-child,
 tbody tr.is-wrong-4 td:last-child,

@@ -81,7 +81,7 @@ function buildLevelCatalog() {
     N4: normalizeLevelData(typeof N4_VOCAB_DATA !== "undefined" ? N4_VOCAB_DATA : [], "N4"),
     N3: normalizeLevelData(typeof N3_VOCAB_DATA !== "undefined" ? N3_VOCAB_DATA : [], "N3"),
     N2: normalizeLevelData(typeof N2_VOCAB_DATA !== "undefined" ? N2_VOCAB_DATA : [], "N2"),
-    N1: [],
+    N1: normalizeLevelData(typeof N1_VOCAB_DATA !== "undefined" ? N1_VOCAB_DATA : [], "N1"),
   };
 
   return catalog;
@@ -1598,6 +1598,9 @@ function getWrongHighlightClass(wrongHits) {
   if (wrongHits === 2) {
     return "is-wrong-2";
   }
+  if (wrongHits === 1) {
+    return "is-wrong-1";
+  }
   return "";
 }
 
@@ -1627,8 +1630,9 @@ function renderCompletedTable(items) {
               ? items
                   .map((word) => {
                     const record = state.progress[word.uid];
+                    const rowClass = getWrongHighlightClass(record.wrongHits);
                     return `
-                      <tr>
+                      <tr class="${rowClass}">
                         <td class="jp-inline">${escapeHtml(word.kanji)}</td>
                         <td class="jp-inline">${escapeHtml(word.hiragana)}</td>
                         <td class="col-meaning">${escapeHtml(word.meaning)}</td>
