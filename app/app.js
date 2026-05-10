@@ -1052,18 +1052,14 @@ function renderNav() {
 
 function renderAuthPanel() {
   if (runtime.auth.user) {
-    const syncDot = runtime.auth.syncMessage ? "🟢" : "🟠";
+    const userLabel = runtime.auth.user.name || runtime.auth.user.email || "U";
     return `
       <div class="auth-panel is-signed-in">
         <div class="auth-user">
-          ${
-            runtime.auth.user.picture
-              ? `<img class="auth-avatar" src="${escapeAttribute(runtime.auth.user.picture)}" alt="${escapeAttribute(runtime.auth.user.name || runtime.auth.user.email || "사용자")}" />`
-              : `<div class="auth-avatar auth-avatar-fallback">${escapeHtml((runtime.auth.user.name || runtime.auth.user.email || "U").slice(0, 1))}</div>`
-          }
+          <div class="auth-avatar auth-avatar-fallback" aria-hidden="true">${escapeHtml(userLabel.slice(0, 1))}</div>
           <div class="auth-copy">
             <strong>${escapeHtml(runtime.auth.user.name || "Google 사용자")}</strong>
-            <span>${syncDot} ${escapeHtml(runtime.auth.user.email || "동기화 저장 사용 중")}</span>
+            <span>${escapeHtml(runtime.auth.user.email || "동기화 저장 사용 중")}</span>
           </div>
         </div>
         <button class="ghost-button auth-logout-button" data-action="logout">로그아웃</button>
@@ -1648,7 +1644,7 @@ function renderProgressTable(items) {
                 ? items
                     .map((word) => {
                       const record = state.progress[word.uid];
-                      const rowClass = getWrongHighlightClass(record.wrongHits);
+                      const rowClass = getWrongHighlightClass(record);
                       return `
                       <tr class="${rowClass}">
                         <td class="jp-inline">${escapeHtml(word.kanji)}</td>
@@ -1673,7 +1669,12 @@ function renderProgressTable(items) {
   `;
 }
 
-function getWrongHighlightClass(wrongHits) {
+function getWrongHighlightClass(record) {
+  const wrongHits = Number(record?.wrongHits) || 0;
+  const correctHits = Number(record?.correctHits) || 0;
+  if (!wrongHits || correctHits >= wrongHits + 1) {
+    return "";
+  }
   if (wrongHits >= 5) {
     return "is-wrong-5";
   }
@@ -1718,7 +1719,7 @@ function renderCompletedTable(items) {
               ? items
                   .map((word) => {
                     const record = state.progress[word.uid];
-                    const rowClass = getWrongHighlightClass(record.wrongHits);
+                    const rowClass = getWrongHighlightClass(record);
                     return `
                       <tr class="${rowClass}">
                         <td class="jp-inline">${escapeHtml(word.kanji)}</td>
@@ -1787,7 +1788,7 @@ function renderWrongOnlyTable(items) {
                   })
                   .map((word) => {
                     const record = state.progress[word.uid];
-                    const rowClass = getWrongHighlightClass(record.wrongHits);
+                    const rowClass = getWrongHighlightClass(record);
                     return `
                       <tr class="${rowClass}">
                         <td class="jp-inline">${escapeHtml(word.kanji)}</td>
