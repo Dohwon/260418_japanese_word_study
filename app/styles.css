@@ -1598,7 +1598,31 @@ tbody tr.is-wrong-5 td {
 .board-pagination-actions {
   display: inline-flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 8px;
+}
+
+.board-page-form {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.board-page-input {
+  width: 74px;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(93, 79, 192, 0.18);
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--text);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.board-page-input:focus {
+  outline: 2px solid rgba(93, 79, 192, 0.18);
+  outline-offset: 1px;
 }
 
 .board-page-btn {
@@ -1619,6 +1643,10 @@ tbody tr.is-wrong-5 td {
 .board-page-btn:disabled {
   opacity: 0.45;
   cursor: default;
+}
+
+.board-page-btn.is-compact {
+  padding-inline: 12px;
 }
 
 .level-count {

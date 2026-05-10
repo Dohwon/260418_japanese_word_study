@@ -496,12 +496,19 @@ function handleClick(event) {
 async function handleSubmit(event) {
   event.preventDefault();
   const form = event.target;
-  const answer = new FormData(form).get("answer");
+  const formData = new FormData(form);
+  const answer = formData.get("answer");
   if (form.dataset.form === "study-answer") {
     await submitStudyAnswer(String(answer || ""));
   }
   if (form.dataset.form === "archive-answer") {
     await submitArchiveAnswer(String(answer || ""));
+  }
+  if (form.dataset.form === "board-page-jump") {
+    const requestedPage = Number(formData.get("page")) || 1;
+    const totalPages = Number(form.dataset.totalPages) || 1;
+    runtime.boardPage = clampNumber(requestedPage, 1, totalPages, 1);
+    render();
   }
 }
 
@@ -1662,9 +1669,24 @@ function renderBoardPagination(pagination) {
         ${pagination.startItem}-${pagination.endItem} / 총 ${pagination.totalItems}개
       </span>
       <div class="board-pagination-actions">
+        <button class="board-page-btn" data-board-page="1" ${pagination.currentPage <= 1 ? "disabled" : ""}>처음</button>
         <button class="board-page-btn" data-board-page="${pagination.currentPage - 1}" ${pagination.currentPage <= 1 ? "disabled" : ""}>이전</button>
+        <form class="board-page-form" data-form="board-page-jump" data-total-pages="${pagination.totalPages}">
+          <input
+            class="board-page-input"
+            type="number"
+            name="page"
+            min="1"
+            max="${pagination.totalPages}"
+            value="${pagination.currentPage}"
+            inputmode="numeric"
+            aria-label="페이지 번호"
+          />
+          <button class="board-page-btn is-compact" type="submit">이동</button>
+        </form>
         <span class="board-pagination-copy">${pagination.currentPage} / ${pagination.totalPages}</span>
         <button class="board-page-btn" data-board-page="${pagination.currentPage + 1}" ${pagination.currentPage >= pagination.totalPages ? "disabled" : ""}>다음</button>
+        <button class="board-page-btn" data-board-page="${pagination.totalPages}" ${pagination.currentPage >= pagination.totalPages ? "disabled" : ""}>마지막</button>
       </div>
     </div>
   `;
