@@ -1,4 +1,5 @@
 const APP_STORAGE_KEY = "jlpt-study-state-v1";
+const BOARD_PAGE_SIZE = 50;
 const LEVELS = ["N5", "N4", "N3", "N2", "N1"];
 const REVIEW_INTERVALS = {
   1: 2 * 24 * 60 * 60 * 1000,
@@ -48,6 +49,7 @@ const runtime = {
   studyTab: "study",
   boardTab: "in-progress",
   boardLevel: "all",
+  boardPage: 1,
   studySession: null,
   archiveSession: null,
   timerId: null,
@@ -391,7 +393,7 @@ function syncRoute() {
 }
 
 function handleClick(event) {
-  const button = event.target.closest("[data-action], [data-route], [data-study-tab], [data-board-tab], [data-board-level], [data-setting]");
+  const button = event.target.closest("[data-action], [data-route], [data-study-tab], [data-board-tab], [data-board-level], [data-board-page], [data-setting]");
   if (!button) {
     return;
   }
@@ -421,12 +423,20 @@ function handleClick(event) {
 
   if (button.dataset.boardTab) {
     runtime.boardTab = button.dataset.boardTab;
+    runtime.boardPage = 1;
     render();
     return;
   }
 
   if (button.dataset.boardLevel) {
     runtime.boardLevel = button.dataset.boardLevel;
+    runtime.boardPage = 1;
+    render();
+    return;
+  }
+
+  if (button.dataset.boardPage) {
+    runtime.boardPage = Math.max(1, Number(button.dataset.boardPage) || 1);
     render();
     return;
   }
@@ -1586,6 +1596,9 @@ function renderBoardPage() {
   const inProgress = words.filter((word) => state.progress[word.uid].stage < 4 && levelFilter(word));
   const archived = words.filter((word) => state.progress[word.uid].stage >= 4 && levelFilter(word));
   const wrongOnly = words.filter((word) => state.progress[word.uid].wrongHits > 0 && levelFilter(word));
+  const boardItems =
+    runtime.boardTab === "in-progress" ? inProgress : runtime.boardTab === "completed" ? archived : wrongOnly;
+  const pagination = paginateBoardItems(boardItems);
 
   return `
     <section class="table-panel">
@@ -1607,12 +1620,53 @@ function renderBoardPage() {
       </div>
       ${
         runtime.boardTab === "in-progress"
-          ? renderProgressTable(inProgress)
+          ? renderProgressTable(pagination.items)
           : runtime.boardTab === "completed"
-            ? renderCompletedTable(archived)
-            : renderWrongOnlyTable(wrongOnly)
+            ? renderCompletedTable(pagination.items)
+            : renderWrongOnlyTable(pagination.items)
       }
+      ${renderBoardPagination(pagination)}
     </section>
+  `;
+}
+
+function paginateBoardItems(items) {
+  const totalItems = items.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / BOARD_PAGE_SIZE));
+  const currentPage = Math.min(runtime.boardPage, totalPages);
+  const startIndex = (currentPage - 1) * BOARD_PAGE_SIZE;
+  const endIndex = startIndex + BOARD_PAGE_SIZE;
+  runtime.boardPage = currentPage;
+  return {
+    items: items.slice(startIndex, endIndex),
+    totalItems,
+    totalPages,
+    currentPage,
+    startItem: totalItems ? startIndex + 1 : 0,
+    endItem: totalItems ? Math.min(endIndex, totalItems) : 0,
+  };
+}
+
+function renderBoardPagination(pagination) {
+  if (pagination.totalItems <= BOARD_PAGE_SIZE) {
+    return `
+      <div class="board-pagination is-static">
+        <span class="board-pagination-copy">총 ${pagination.totalItems}개 단어</span>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="board-pagination">
+      <span class="board-pagination-copy">
+        ${pagination.startItem}-${pagination.endItem} / 총 ${pagination.totalItems}개
+      </span>
+      <div class="board-pagination-actions">
+        <button class="board-page-btn" data-board-page="${pagination.currentPage - 1}" ${pagination.currentPage <= 1 ? "disabled" : ""}>이전</button>
+        <span class="board-pagination-copy">${pagination.currentPage} / ${pagination.totalPages}</span>
+        <button class="board-page-btn" data-board-page="${pagination.currentPage + 1}" ${pagination.currentPage >= pagination.totalPages ? "disabled" : ""}>다음</button>
+      </div>
+    </div>
   `;
 }
 
