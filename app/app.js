@@ -1,11 +1,12 @@
 const APP_STORAGE_KEY = "jlpt-study-state-v1";
 const BOARD_PAGE_SIZE = 50;
 const LEVELS = ["N5", "N4", "N3", "N2", "N1"];
+const MAX_STUDY_HISTORY = 8;
 const REVIEW_INTERVALS = {
-  1: 2 * 24 * 60 * 60 * 1000,
-  2: 3 * 24 * 60 * 60 * 1000,
-  3: 7 * 24 * 60 * 60 * 1000,
-  4: 14 * 24 * 60 * 60 * 1000,
+  1: 3 * 24 * 60 * 60 * 1000,
+  2: 7 * 24 * 60 * 60 * 1000,
+  3: 10 * 24 * 60 * 60 * 1000,
+  4: 0,
 };
 const MEANING_SYNONYM_GROUPS = [
   ["사이", "간격"],
@@ -135,6 +136,7 @@ function createStateFromSnapshot(snapshot = {}) {
       randomLevel: Boolean(snapshot.settings?.randomLevel),
     },
     archiveRuns: Array.isArray(snapshot.archiveRuns) ? snapshot.archiveRuns : [],
+    studySessionHistory: normalizeStudySessionHistory(snapshot.studySessionHistory),
     progress,
   };
 }
@@ -178,6 +180,7 @@ function buildCompactStateSnapshot(snapshot = state) {
       randomLevel: Boolean(snapshot.settings?.randomLevel),
     },
     archiveRuns: Array.isArray(snapshot.archiveRuns) ? snapshot.archiveRuns.slice(0, 25) : [],
+    studySessionHistory: normalizeStudySessionHistory(snapshot.studySessionHistory),
     progress: compactProgress,
   };
 }
@@ -193,12 +196,12 @@ function mergeStateSnapshots(localState, remoteState) {
     const olderRecord = localIsNewer ? remoteRecord : localRecord;
 
     mergedProgress[word.uid] = {
-      stage: Math.max(localRecord?.stage || 0, remoteRecord?.stage || 0),
+      stage: newerRecord?.stage ?? olderRecord?.stage ?? 0,
       studyCount: Math.max(localRecord?.studyCount || 0, remoteRecord?.studyCount || 0),
       correctHits: Math.max(localRecord?.correctHits || 0, remoteRecord?.correctHits || 0),
       wrongHits: Math.max(localRecord?.wrongHits || 0, remoteRecord?.wrongHits || 0),
-      nextReviewAt: Math.max(localRecord?.nextReviewAt || 0, remoteRecord?.nextReviewAt || 0),
-      lastStudiedAt: Math.max(localRecord?.lastStudiedAt || 0, remoteRecord?.lastStudiedAt || 0),
+      nextReviewAt: newerRecord?.nextReviewAt ?? olderRecord?.nextReviewAt ?? 0,
+      lastStudiedAt: newerRecord?.lastStudiedAt ?? olderRecord?.lastStudiedAt ?? 0,
       lastStudiedDay: newerRecord?.lastStudiedDay || olderRecord?.lastStudiedDay || "",
     };
   }
@@ -215,6 +218,10 @@ function mergeStateSnapshots(localState, remoteState) {
 
   const preferLocalSettings = (Number(localState.meta?.updatedAt) || 0) >= (Number(remoteState.meta?.updatedAt) || 0);
   const preferredSettings = preferLocalSettings ? localState.settings : remoteState.settings;
+  const studySessionHistory = normalizeStudySessionHistory([
+    ...(localState.studySessionHistory || []),
+    ...(remoteState.studySessionHistory || []),
+  ]);
 
   return {
     meta: {
@@ -225,8 +232,22 @@ function mergeStateSnapshots(localState, remoteState) {
       randomLevel: Boolean(preferredSettings?.randomLevel),
     },
     archiveRuns,
+    studySessionHistory,
     progress: mergedProgress,
   };
+}
+
+function normalizeStudySessionHistory(source) {
+  return (Array.isArray(source) ? source : [])
+    .filter((entry) => entry?.id)
+    .map((entry) => ({
+      id: String(entry.id),
+      completedAt: Number(entry.completedAt) || 0,
+      wrongIds: Array.isArray(entry.wrongIds) ? [...new Set(entry.wrongIds.map((item) => String(item)).filter(Boolean))] : [],
+    }))
+    .filter((entry, index, array) => array.findIndex((candidate) => candidate.id === entry.id) === index)
+    .sort((left, right) => right.completedAt - left.completedAt)
+    .slice(0, MAX_STUDY_HISTORY);
 }
 
 function getStateSnapshotSignature(snapshot) {
@@ -519,11 +540,15 @@ function ensureStudySession() {
 
   const cards = buildStudyQueue();
   runtime.studySession = {
+    sessionId: createStudySessionId(),
     cards,
     currentIndex: 0,
     answerDraft: "",
     leftPile: [],
     rightPile: [],
+    wrongWordIds: new Set(),
+    inlineReviewQueuedIds: new Set(),
+    historyRecorded: false,
     isAnimating: false,
     motion: "",
     message: cards.length ? "" : "오늘 바로 풀 수 있는 카드가 없습니다. 새 묶음을 만들거나 다음 복습 시점을 기다려 주세요.",
@@ -531,159 +556,152 @@ function ensureStudySession() {
 }
 
 function buildStudyQueue() {
-  const randomOrder = state.settings.randomOrder;
-  const randomLevel = state.settings.randomLevel;
+  const randomize = state.settings.randomOrder || state.settings.randomLevel;
   const now = Date.now();
-  const selectedLevels = randomLevel ? getAvailableLevels() : [getCurrentLevel()];
+  const selectedLevels = state.settings.randomLevel ? getAvailableLevels() : [getCurrentLevel()];
   const perLevelFocusDay = Object.fromEntries(selectedLevels.map((level) => [level, getCurrentDay(level)]));
-
-  const pools = {
-    fresh: [],
-    wrong: [],
-    hit1: [],
-    hit2: [],
-    hit3: [],
-    hit4: [],
-  };
-
-  for (const level of selectedLevels) {
-    const focusDay = perLevelFocusDay[level];
-    const levelWords = getWordsByLevel(level);
-
-    for (const word of levelWords) {
-      const record = state.progress[word.uid];
-      const isFresh = record.studyCount === 0;
-
-      if (isFresh) {
-        if (randomLevel || word.day === focusDay) {
-          pools.fresh.push(word);
-        }
-        continue;
-      }
-
-      const effectiveHits = getEffectiveCorrectCount(record);
-
-      if (record.wrongHits > 0 && effectiveHits === 0) {
-        pools.wrong.push(word);
-        continue;
-      }
-
-      if (effectiveHits === 1) {
-        pools.hit1.push(word);
-        continue;
-      }
-
-      if (effectiveHits === 2) {
-        pools.hit2.push(word);
-        continue;
-      }
-
-      if (effectiveHits === 3) {
-        pools.hit3.push(word);
-        continue;
-      }
-
-      if (effectiveHits >= 4) {
-        pools.hit4.push(word);
-      }
-    }
-  }
-
-  const randomize = randomOrder || randomLevel;
   const usedIds = new Set();
+  const recentHistory = normalizeStudySessionHistory(state.studySessionHistory);
+
+  const previousWrong = getRecentWrongWords(recentHistory[0], selectedLevels, randomize);
+  const dueReviews = getDueReviewWords(selectedLevels, now, randomize);
+  const olderWrong2 = getRecentWrongWords(recentHistory[1], selectedLevels, randomize);
+  const olderWrong3 = getRecentWrongWords(recentHistory[2], selectedLevels, randomize);
+  const olderWrong4 = getRecentWrongWords(recentHistory[3], selectedLevels, randomize);
+  const freshWords = getFreshStudyWords(selectedLevels, perLevelFocusDay, randomize);
+
   const selected = [
-    ...takeStudyBucket(pools.fresh, 10, "fresh", randomize, usedIds, now),
-    ...takeStudyBucket(pools.wrong, 7, "wrong", randomize, usedIds, now),
-    ...takeStudyBucket(pools.hit1, 5, "hit1", randomize, usedIds, now),
-    ...takeStudyBucket(pools.hit2, 3, "hit2", randomize, usedIds, now),
-    ...takeStudyBucket(pools.hit3, 3, "hit3", randomize, usedIds, now),
-    ...takeStudyBucket(pools.hit4, 2, "hit4", true, usedIds, now),
+    ...takeOrderedWords(previousWrong, previousWrong.length, usedIds),
+    ...takeOrderedWords(dueReviews, dueReviews.length, usedIds),
+    ...takeOrderedWords(olderWrong2, 10, usedIds),
+    ...takeOrderedWords(olderWrong3, 5, usedIds),
+    ...takeOrderedWords(olderWrong4, 5, usedIds),
+    ...takeOrderedWords(freshWords, 10, usedIds),
   ];
 
   if (selected.length < 30) {
-    const fallback = [
-      ...listStudyBucketCandidates(pools.wrong, "wrong", randomize, usedIds, now),
-      ...listStudyBucketCandidates(pools.hit1, "hit1", randomize, usedIds, now),
-      ...listStudyBucketCandidates(pools.hit2, "hit2", randomize, usedIds, now),
-      ...listStudyBucketCandidates(pools.hit3, "hit3", randomize, usedIds, now),
-      ...listStudyBucketCandidates(pools.hit4, "hit4", true, usedIds, now),
-      ...listStudyBucketCandidates(pools.fresh, "fresh", randomize, usedIds, now),
-    ].slice(0, 30 - selected.length);
-
+    const fallback = getFallbackReviewWords(selectedLevels, randomize).filter((word) => !usedIds.has(word.uid)).slice(0, 30 - selected.length);
+    for (const word of fallback) {
+      usedIds.add(word.uid);
+    }
     selected.push(...fallback);
   }
 
   return selected.map((word) => word.uid);
 }
 
-function takeStudyBucket(pool, targetCount, bucketType, randomize, usedIds, now) {
-  const picked = listStudyBucketCandidates(pool, bucketType, randomize, usedIds, now).slice(0, targetCount);
-  for (const word of picked) {
+function createStudySessionId() {
+  return `study-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+function getRecentWrongWords(historyEntry, selectedLevels, randomize) {
+  if (!historyEntry?.wrongIds?.length) {
+    return [];
+  }
+
+  const allowedLevels = new Set(selectedLevels);
+  const orderedWords = historyEntry.wrongIds
+    .map((wordId) => wordMap.get(wordId))
+    .filter((word) => word && allowedLevels.has(word.level))
+    .sort((left, right) => compareStudyHistoryWords(left, right));
+  return randomize ? shuffled(orderedWords) : orderedWords;
+}
+
+function getDueReviewWords(selectedLevels, now, randomize) {
+  const allowedLevels = new Set(selectedLevels);
+  const orderedWords = words
+    .filter((word) => {
+      const record = state.progress[word.uid];
+      return allowedLevels.has(word.level) && record.studyCount > 0 && record.stage < 4 && record.nextReviewAt > 0 && record.nextReviewAt <= now;
+    })
+    .sort((left, right) => compareDueReviewWords(left, right));
+  return randomize ? shuffled(orderedWords) : orderedWords;
+}
+
+function getFreshStudyWords(selectedLevels, perLevelFocusDay, randomize) {
+  const allowedLevels = new Set(selectedLevels);
+  const orderedWords = words
+    .filter((word) => {
+      const record = state.progress[word.uid];
+      if (!allowedLevels.has(word.level) || record.studyCount > 0) {
+        return false;
+      }
+      return state.settings.randomLevel || word.day === perLevelFocusDay[word.level];
+    })
+    .sort((left, right) => compareFreshWords(left, right));
+  return randomize ? shuffled(orderedWords) : orderedWords;
+}
+
+function getFallbackReviewWords(selectedLevels, randomize) {
+  const allowedLevels = new Set(selectedLevels);
+  const orderedWords = words
+    .filter((word) => {
+      const record = state.progress[word.uid];
+      return allowedLevels.has(word.level) && record.stage < 4;
+    })
+    .sort((left, right) => compareFallbackWords(left, right));
+  return randomize ? shuffled(orderedWords) : orderedWords;
+}
+
+function takeOrderedWords(pool, targetCount, usedIds) {
+  const picked = [];
+  for (const word of pool) {
+    if (usedIds.has(word.uid)) {
+      continue;
+    }
+    picked.push(word);
     usedIds.add(word.uid);
+    if (picked.length >= targetCount) {
+      break;
+    }
   }
   return picked;
 }
 
-function listStudyBucketCandidates(pool, bucketType, randomize, usedIds, now) {
-  return pool
-    .filter((word) => !usedIds.has(word.uid))
-    .map((word) => ({
-      word,
-      record: state.progress[word.uid],
-      isDue: state.progress[word.uid].nextReviewAt <= now,
-      randomKey: Math.random(),
-    }))
-    .sort((left, right) => compareStudyCandidates(left, right, bucketType, randomize))
-    .map((entry) => entry.word);
-}
-
-function compareStudyCandidates(left, right, bucketType, randomize) {
-  const leftRecord = left.record;
-  const rightRecord = right.record;
-  const dueDiff = Number(right.isDue) - Number(left.isDue);
-  if (dueDiff !== 0) {
-    return dueDiff;
-  }
-
-  const nextReviewDiff = leftRecord.nextReviewAt - rightRecord.nextReviewAt;
-  if (!left.isDue && !right.isDue && nextReviewDiff !== 0) {
-    return nextReviewDiff;
-  }
-
-  if (bucketType === "wrong") {
-    const wrongDiff = rightRecord.wrongHits - leftRecord.wrongHits;
-    if (wrongDiff !== 0) {
-      return wrongDiff;
-    }
-
-    const effectiveDiff = getEffectiveCorrectCount(leftRecord) - getEffectiveCorrectCount(rightRecord);
-    if (effectiveDiff !== 0) {
-      return effectiveDiff;
-    }
-  }
-
-  const studyCountDiff = leftRecord.studyCount - rightRecord.studyCount;
-  if (studyCountDiff !== 0) {
-    return studyCountDiff;
-  }
-
+function compareStudyHistoryWords(leftWord, rightWord) {
+  const leftRecord = state.progress[leftWord.uid];
+  const rightRecord = state.progress[rightWord.uid];
   const lastStudiedDiff = leftRecord.lastStudiedAt - rightRecord.lastStudiedAt;
   if (lastStudiedDiff !== 0) {
     return lastStudiedDiff;
   }
-
-  if (randomize) {
-    const randomDiff = left.randomKey - right.randomKey;
-    if (randomDiff !== 0) {
-      return randomDiff;
-    }
+  const wrongDiff = rightRecord.wrongHits - leftRecord.wrongHits;
+  if (wrongDiff !== 0) {
+    return wrongDiff;
   }
-
-  return compareWordSequence(left.word, right.word);
+  return compareWordSequence(leftWord, rightWord);
 }
 
-function getEffectiveCorrectCount(record) {
-  return Math.max(0, (Number(record.correctHits) || 0) - (Number(record.wrongHits) || 0));
+function compareDueReviewWords(leftWord, rightWord) {
+  const leftRecord = state.progress[leftWord.uid];
+  const rightRecord = state.progress[rightWord.uid];
+  const dueDiff = leftRecord.nextReviewAt - rightRecord.nextReviewAt;
+  if (dueDiff !== 0) {
+    return dueDiff;
+  }
+  const lastStudiedDiff = leftRecord.lastStudiedAt - rightRecord.lastStudiedAt;
+  if (lastStudiedDiff !== 0) {
+    return lastStudiedDiff;
+  }
+  return compareWordSequence(leftWord, rightWord);
+}
+
+function compareFreshWords(leftWord, rightWord) {
+  return compareWordSequence(leftWord, rightWord);
+}
+
+function compareFallbackWords(leftWord, rightWord) {
+  const leftRecord = state.progress[leftWord.uid];
+  const rightRecord = state.progress[rightWord.uid];
+  const lastStudiedDiff = leftRecord.lastStudiedAt - rightRecord.lastStudiedAt;
+  if (lastStudiedDiff !== 0) {
+    return lastStudiedDiff;
+  }
+  const studyCountDiff = leftRecord.studyCount - rightRecord.studyCount;
+  if (studyCountDiff !== 0) {
+    return studyCountDiff;
+  }
+  return compareWordSequence(leftWord, rightWord);
 }
 
 function compareWordSequence(leftWord, rightWord) {
@@ -736,6 +754,8 @@ async function submitStudyAnswer(rawAnswer) {
     if (isCorrect) {
       session.rightPile.push(word.uid);
     } else {
+      session.wrongWordIds.add(word.uid);
+      queueImmediateReview(session, word.uid);
       session.leftPile.push(word.uid);
     }
     session.currentIndex += 1;
@@ -743,6 +763,7 @@ async function submitStudyAnswer(rawAnswer) {
     session.isAnimating = false;
     session.motion = "";
     if (session.currentIndex >= session.cards.length) {
+      finalizeStudySession(session);
       session.message = "오늘 카드가 모두 넘어갔습니다. 공부 종료를 누르면 전체 단어 확인하기로 이동합니다.";
     }
     render();
@@ -758,13 +779,40 @@ function registerStudyResult(wordId, isCorrect) {
   if (isCorrect) {
     record.correctHits += 1;
     record.stage = Math.min(record.stage + 1, 4);
-    record.nextReviewAt = Date.now() + REVIEW_INTERVALS[record.stage];
+    record.nextReviewAt = record.stage >= 4 ? 0 : Date.now() + REVIEW_INTERVALS[record.stage];
   } else {
     record.wrongHits += 1;
-    record.stage = Math.max(record.stage - 1, 0);
+    record.stage = 0;
     record.nextReviewAt = Date.now();
   }
 
+  saveState();
+}
+
+function queueImmediateReview(session, wordId) {
+  if (!session || session.inlineReviewQueuedIds.has(wordId)) {
+    return;
+  }
+  const insertOffset = 2 + Math.floor(Math.random() * 3);
+  const insertIndex = Math.min(session.currentIndex + insertOffset + 1, session.cards.length);
+  session.cards.splice(insertIndex, 0, wordId);
+  session.inlineReviewQueuedIds.add(wordId);
+}
+
+function finalizeStudySession(session) {
+  if (!session || session.historyRecorded) {
+    return;
+  }
+
+  state.studySessionHistory = normalizeStudySessionHistory([
+    {
+      id: session.sessionId,
+      completedAt: Date.now(),
+      wrongIds: [...session.wrongWordIds],
+    },
+    ...(state.studySessionHistory || []),
+  ]);
+  session.historyRecorded = true;
   saveState();
 }
 
@@ -966,7 +1014,7 @@ function registerArchiveAttempt(wordId, isCorrect) {
   if (isCorrect) {
     record.correctHits += 1;
     record.stage = 4;
-    record.nextReviewAt = Date.now() + REVIEW_INTERVALS[4];
+    record.nextReviewAt = 0;
   } else {
     record.wrongHits += 1;
   }
@@ -975,7 +1023,7 @@ function registerArchiveAttempt(wordId, isCorrect) {
 
 function demoteArchivedWord(wordId) {
   const record = state.progress[wordId];
-  record.stage = 3;
+  record.stage = 0;
   record.nextReviewAt = Date.now();
   saveState();
 }
@@ -1326,7 +1374,7 @@ function renderStudyPage() {
                 <button class="mode-button ${state.settings.randomLevel ? "is-active" : ""}" data-setting="randomLevel">랜덤 급수</button>
                 <button class="ghost-button" data-action="regenerate-study">새 카드 묶기</button>
               </div>
-              <span class="bundle-rule-note">묶음 규칙: 모르는 카드 10, 1회 맞춘 10, 2회 5, 3회 5, 4회 이상 5장</span>
+              <span class="bundle-rule-note">묶음 규칙: 직전 오답 전부 + due 복습 전부 + 2/3/4회전 오답 + 신규 최대 10장</span>
             </div>
             ${renderStudyDeck(current, total)}
           `
@@ -1399,7 +1447,7 @@ function renderStudyDeck(current, total) {
             <div class="study-face back">
               <div class="study-face-content">
                 <div class="card-backline">
-                  <span class="card-badge">${record.stage >= 4 ? "아카이브 후보" : `현재 누적 ${record.stage}회`}</span>
+                  <span class="card-badge">${record.stage >= 4 ? "아카이브 후보" : `연속 정답 ${record.stage}회`}</span>
                   <span class="card-badge">${session.motion === "is-right" ? "정답" : "오답"}</span>
                 </div>
                 <div class="card-word">
