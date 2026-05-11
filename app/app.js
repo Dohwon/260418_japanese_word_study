@@ -268,6 +268,7 @@ function saveStateLocallyOnly() {
 async function bootApp() {
   render();
   await loadAuthConfig();
+  render();
   await restoreServerSession();
   render();
 }
@@ -474,6 +475,11 @@ function handleClick(event) {
   }
 
   const action = button.dataset.action;
+  if (action === "reload-auth-config") {
+    reloadAuthConfig().catch(() => {});
+    return;
+  }
+
   if (action === "logout") {
     logout().catch(() => {});
     return;
@@ -532,6 +538,13 @@ async function handleSubmit(event) {
     runtime.boardPage = clampNumber(requestedPage, 1, totalPages, 1);
     render();
   }
+}
+
+async function reloadAuthConfig() {
+  runtime.auth.error = "";
+  render();
+  await loadAuthConfig();
+  render();
 }
 
 function ensureStudySession() {
@@ -1145,7 +1158,7 @@ function renderAuthPanel() {
     `;
   }
 
-  if (runtime.auth.status === "loading") {
+  if (runtime.auth.status === "loading" && !runtime.auth.clientId) {
     return `
       <div class="auth-panel">
         <div class="auth-note">로그인 상태를 확인 중입니다.</div>
@@ -1156,7 +1169,8 @@ function renderAuthPanel() {
   if (!runtime.auth.clientId) {
     return `
       <div class="auth-panel">
-        <div class="auth-note">${escapeHtml(runtime.auth.error || "Google 로그인 설정이 필요합니다.")}</div>
+        <button class="ghost-button auth-retry-button" data-action="reload-auth-config">로그인 버튼 다시 불러오기</button>
+        <div class="auth-note">${escapeHtml(runtime.auth.error || "Google 로그인 버튼을 준비하지 못했습니다.")}</div>
       </div>
     `;
   }
