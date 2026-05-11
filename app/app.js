@@ -51,6 +51,7 @@ const runtime = {
   boardTab: "in-progress",
   boardLevel: "all",
   boardPage: 1,
+  lastNavMarkup: "",
   studySession: null,
   archiveSession: null,
   timerId: null,
@@ -1076,16 +1077,30 @@ function getAvailableLevels() {
 }
 
 function render() {
-  root.innerHTML = `
-    <div class="shell">
-      ${renderNav()}
-      <main class="page">
-        ${renderRoute()}
-      </main>
-    </div>
-  `;
+  let navRoot = root.querySelector("[data-shell-nav]");
+  let pageRoot = root.querySelector("[data-shell-page]");
 
-  const activeInput = root.querySelector(".study-input");
+  if (!navRoot || !pageRoot) {
+    root.innerHTML = `
+      <div class="shell">
+        <nav class="nav" data-shell-nav></nav>
+        <main class="page" data-shell-page></main>
+      </div>
+    `;
+    navRoot = root.querySelector("[data-shell-nav]");
+    pageRoot = root.querySelector("[data-shell-page]");
+    runtime.lastNavMarkup = "";
+  }
+
+  const navMarkup = renderNav();
+  if (runtime.lastNavMarkup !== navMarkup) {
+    navRoot.innerHTML = navMarkup;
+    runtime.lastNavMarkup = navMarkup;
+  }
+
+  pageRoot.innerHTML = renderRoute();
+
+  const activeInput = pageRoot.querySelector(".study-input");
   if (activeInput && !runtime.studySession?.isAnimating && !runtime.archiveSession?.isAnimating) {
     window.requestAnimationFrame(() => activeInput.focus());
   }
@@ -1097,21 +1112,19 @@ function render() {
 
 function renderNav() {
   return `
-    <nav class="nav">
-      <div class="nav-brand">
-        <div class="nav-kana">単</div>
-        <div class="nav-copy">
-          <strong>JLPT 단어 공부장</strong>
-          <span>순서대로 쌓고, 틀린 카드까지 다시 잡는 학습 흐름</span>
-        </div>
+    <div class="nav-brand">
+      <div class="nav-kana">単</div>
+      <div class="nav-copy">
+        <strong>JLPT 단어 공부장</strong>
+        <span>순서대로 쌓고, 틀린 카드까지 다시 잡는 학습 흐름</span>
       </div>
-      <div class="nav-actions">
-        <button class="nav-link ${runtime.route === "home" ? "is-active" : ""}" data-route="home">홈</button>
-        <button class="nav-link ${runtime.route === "study" ? "is-active" : ""}" data-route="study">단어 공부하기</button>
-        <button class="nav-link ${runtime.route === "board" ? "is-active" : ""}" data-route="board">전체 오답 확인하기</button>
-      </div>
-      ${renderAuthPanel()}
-    </nav>
+    </div>
+    <div class="nav-actions">
+      <button class="nav-link ${runtime.route === "home" ? "is-active" : ""}" data-route="home">홈</button>
+      <button class="nav-link ${runtime.route === "study" ? "is-active" : ""}" data-route="study">단어 공부하기</button>
+      <button class="nav-link ${runtime.route === "board" ? "is-active" : ""}" data-route="board">전체 오답 확인하기</button>
+    </div>
+    ${renderAuthPanel()}
   `;
 }
 
